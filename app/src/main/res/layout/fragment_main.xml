@@ -13,7 +13,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        tools:listitem="@layout/fragment_main_list_item" />
+        android:dividerHeight="8dp"
+        tools:listitem="@layout/fragment_main_list_item"
+        android:layout_marginBottom="12dp"
+        android:elevation="8dp" />
 </RelativeLayout>
