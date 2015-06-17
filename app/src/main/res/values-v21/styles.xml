@@ -6,10 +6,10 @@
     </style>
 
     <style name="Theme.MyMaterial" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">#F44336</item>
-        <item name="colorPrimaryDark">#D32F2F</item>
-        <item name="colorAccent">#E53935</item>
-        <item name="android:navigationBarColor" >#F44336</item>
+        <item name="colorPrimary">#F06292</item>
+        <item name="colorPrimaryDark">#E91E63</item>
+        <item name="colorAccent">#F48FB1</item>
+        <item name="android:navigationBarColor" >#F06292</item>
     </style>
 
 </resources>
