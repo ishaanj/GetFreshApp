@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.MyMaterial" parent="Theme.AppCompat.Light">
+    <style name="Theme.MyMaterial" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">#F06292</item>
         <item name="colorPrimaryDark">#E91E63</item>
         <item name="colorAccent">#F48FB1</item>
