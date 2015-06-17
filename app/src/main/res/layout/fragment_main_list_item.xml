@@ -20,7 +20,7 @@
         android:layout_below="@+id/list_main_image"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textSize="32dp"
+        android:textSize="20dp"
         android:layout_toLeftOf="@+id/list_main_price"
         android:layout_toStartOf="@+id/list_main_price" />
 
@@ -31,7 +31,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/list_main_title"
-        android:textSize="28dp" />
+        android:textSize="16dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -42,7 +42,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="12dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
         android:id="@+id/list_main_price"
-        android:textSize="32dp"
+        android:textSize="20dp"
         android:layout_above="@+id/list_main_subtitle"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
@@ -63,18 +63,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="8dp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/list_main_flavour2"
-        android:layout_below="@+id/list_main_flavour2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="8dp" />
+        android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>

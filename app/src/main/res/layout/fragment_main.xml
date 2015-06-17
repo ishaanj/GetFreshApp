@@ -17,6 +17,7 @@
         android:layout_marginBottom="12dp"
         android:elevation="8dp"
         android:background="#B0BEC5"
-        android:divider="#99b0af"
-        android:dividerHeight="8dp" />
+        android:divider="#ccccFF"
+        android:dividerHeight="30dp" />
+
 </RelativeLayout>

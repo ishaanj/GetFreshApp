@@ -123,8 +123,11 @@ public class MainActivityFragment extends Fragment {
             vh.desc.setText(itemDescriptions[position]);
             vh.price.setText(itemPrices[position]);
             vh.subtitle.setText(itemSubtitles[position]);
+
+            if(!itemFlavour2[position].equals(""))
+            vh.flavour1.setText(itemFlavour1[position] + "," + itemFlavour2[position]);
+            else
             vh.flavour1.setText(itemFlavour1[position]);
-            vh.flavour2.setText(itemFlavour2[position]);
 
             return v;
         }
@@ -172,7 +175,6 @@ public class MainActivityFragment extends Fragment {
             TextView price;
             TextView subtitle;
             TextView flavour1;
-            TextView flavour2;
 
             public ViewHolder(View v) {
                 img = (ImageView) v.findViewById(R.id.list_main_image);
@@ -181,7 +183,6 @@ public class MainActivityFragment extends Fragment {
                 price = (TextView) v.findViewById(R.id.list_main_price);
                 subtitle = (TextView) v.findViewById(R.id.list_main_subtitle);
                 flavour1 = (TextView)v.findViewById(R.id.list_main_flavour1);
-                flavour2 = (TextView)v.findViewById(R.id.list_main_flavour2);
                 v.setTag(this);
             }
         }
