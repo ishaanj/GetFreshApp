@@ -116,11 +116,6 @@ public class MainActivityFragment extends Fragment {
             vh.title.setText(itemTitles[position]);
             vh.desc.setText(itemDescriptions[position]);
             vh.price.setText(itemPrices[position]);
-            //Bitmap bit = decodeSampledBitmapFromResource(getActivity().getResources(), imageIds[position], vh.img.getWidth(), vh.img.getHeight());
-            vh.img.setImageResource(imageIds[position]);
-
-            vh.title.setText(itemTitles[position]);
-            vh.desc.setText(itemDescriptions[position]);
 
             return v;
         }
