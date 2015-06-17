@@ -10,7 +10,7 @@
         <item>Nizam-e-Khas</item>
         <item>Creamy Ajwain</item>
         <item>Peppy BBQ</item>
-        <item>Aai's Masala</item>
+        <item>Aai\'s Masala</item>
         <item>Jaffna</item>
         <item>Madras Magic</item>
         <item>Kolkata Calling</item>
@@ -22,7 +22,7 @@
     </string-array>
 
     <string-array name="item_subtitles">
-        <item>GOD'S OWN SPICE MIX</item>
+        <item>GOD\'S OWN SPICE MIX</item>
         <item>GOAN SIZZLE</item>
         <item>KERALITE BEACH DELIGHT</item>
         <item>PUNJAB DA PUNCH!</item>
@@ -41,11 +41,11 @@
     </string-array>
 
     <string-array name="item_descriptions">
-        <item>This one comes from Kerala's Syrian Christian aka Suriyani Kitchen. Fresh spices, including coriander, pepper and green cardamom, create a delicious whirl of taste.</item>
+        <item>This one comes from Kerala\'s Syrian Christian aka Suriyani Kitchen. Fresh spices, including coriander, pepper and green cardamom, create a delicious whirl of taste.</item>
         <item>This spicy-tangy Goan staple uses Kashmiri chillies, garlic, cumin and peppercorns, with tamarind playing a vital role in bringing out its robust and lively flavour.</item>
         <item>Fresh curry leaves join hands with slivers of dried red chilly to create this refreshingly aromatic spicy dish rooted in coastal Kerala.</item>
         <item>A spin on the iconic medium-spicy marinade concocted out of a blend of North Indian spices smoothened by fresh yogurt.</item>
-        <item>This fiery Portuguese sauce brings together pungent bird's eye chilles and garlic, pepper, white wine vinegar and olive oil to leave a sizzle you will love instantly.</item>
+        <item>This fiery Portuguese sauce brings together pungent bird\'s eye chilles and garlic, pepper, white wine vinegar and olive oil to leave a sizzle you will love instantly.</item>
         <item>The richness of freshly ground spices comes together with the pungent spike of green chilly and slightly bitter bite of dried fenugreek.</item>
         <item>Inspired by Hyderabad’s iconic biryani, this marinade blends freshly ground garam masala, ginger, garlic and green chilly, tempered with fresh coriander, curd and lemon juice.</item>
         <item>Ajwain, with its thyme-like aroma, is the king of this mix, ably complemented by the indulgent flavours of cream and yoghurt.</item>

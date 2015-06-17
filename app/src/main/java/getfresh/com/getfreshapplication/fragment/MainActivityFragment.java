@@ -70,6 +70,9 @@ public class MainActivityFragment extends Fragment {
         private String[] itemTitles;
         private String[] itemDescriptions;
         private String[] itemPrices;
+        private String[] itemSubtitles;
+        private String[] itemFlavour1;
+        private String[] itemFlavour2;
         private LayoutInflater inflater;
 
         public ItemAdapter() {
@@ -77,6 +80,9 @@ public class MainActivityFragment extends Fragment {
             itemTitles = getActivity().getResources().getStringArray(R.array.item_titles);
             itemDescriptions = getActivity().getResources().getStringArray(R.array.item_descriptions);
             itemPrices = getActivity().getResources().getStringArray(R.array.item_prices);
+            itemSubtitles = getActivity().getResources().getStringArray(R.array.item_subtitles);
+            itemFlavour1 = getActivity().getResources().getStringArray(R.array.item_flavours1);
+            itemFlavour2 = getActivity().getResources().getStringArray(R.array.item_flavours2);
         }
 
         @Override
@@ -116,6 +122,9 @@ public class MainActivityFragment extends Fragment {
             vh.title.setText(itemTitles[position]);
             vh.desc.setText(itemDescriptions[position]);
             vh.price.setText(itemPrices[position]);
+            vh.subtitle.setText(itemSubtitles[position]);
+            vh.flavour1.setText(itemFlavour1[position]);
+            vh.flavour2.setText(itemFlavour2[position]);
 
             return v;
         }
@@ -161,13 +170,18 @@ public class MainActivityFragment extends Fragment {
             TextView title;
             TextView desc;
             TextView price;
+            TextView subtitle;
+            TextView flavour1;
+            TextView flavour2;
 
             public ViewHolder(View v) {
                 img = (ImageView) v.findViewById(R.id.list_main_image);
                 title = (TextView) v.findViewById(R.id.list_main_title);
                 desc = (TextView) v.findViewById(R.id.list_main_description);
                 price = (TextView) v.findViewById(R.id.list_main_price);
-
+                subtitle = (TextView) v.findViewById(R.id.list_main_subtitle);
+                flavour1 = (TextView)v.findViewById(R.id.list_main_flavour1);
+                flavour2 = (TextView)v.findViewById(R.id.list_main_flavour2);
                 v.setTag(this);
             }
         }
