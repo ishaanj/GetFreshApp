@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>4
+    <string-array name="item_titles">
+        <item>Title1</item>
+        <item>Title2</item>
+        <item>Title3</item>
+        <item>Title4</item>
+        <item>Title5</item>
+        <item>Title6</item>
+        <item>Title7</item>
+        <item>Title8</item>
+        <item>Title9</item>
+        <item>Title10</item>
+        <item>Title11</item>
+        <item>Title12</item>
+        <item>Title13</item>
+        <item>Title14</item>
+        <item>Title15</item>
+        <item>Title16</item>
+    </string-array>
+
+    <string-array name="item_descriptions">
+        <item>Description1</item>
+        <item>Description2</item>
+        <item>Description3</item>
+        <item>Description4</item>
+        <item>Description5</item>
+        <item>Description6</item>
+        <item>Description7</item>
+        <item>Description8</item>
+        <item>Description9</item>
+        <item>Description10</item>
+        <item>Description11</item>
+        <item>Description12</item>
+        <item>Description13</item>
+        <item>Description14</item>
+        <item>Description15</item>
+        <item>Description16</item>
+    </string-array>
+
+    <string-array name="item_prices">
+        <item>Price1</item>
+        <item>Price2</item>
+        <item>Price3</item>
+        <item>Price4</item>
+        <item>Price5</item>
+        <item>Price6</item>
+        <item>Price7</item>
+        <item>Price8</item>
+        <item>Price9</item>
+        <item>Price10</item>
+        <item>Price11</item>
+        <item>Price12</item>
+        <item>Price13</item>
+        <item>Price14</item>
+        <item>Price15</item>
+        <item>Price16</item>
+
+    </string-array>
+</resources>

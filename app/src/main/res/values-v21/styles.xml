@@ -9,6 +9,7 @@
         <item name="colorPrimary">#F44336</item>
         <item name="colorPrimaryDark">#D32F2F</item>
         <item name="colorAccent">#E53935</item>
+        <item name="android:navigationBarColor" >#F44336</item>
     </style>
 
 </resources>
