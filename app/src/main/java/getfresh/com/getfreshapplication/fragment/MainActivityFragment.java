@@ -46,12 +46,6 @@ public class MainActivityFragment extends Fragment {
             isLand = false;
         }
         return isLand;
-        lv = (ListView) v.findViewById(R.id.main_list);
-        adapter = new ItemAdapter();
-
-        lv.setAdapter(adapter);
-
-        return v;
     }
 
     private class ItemAdapter extends BaseAdapter {
@@ -183,7 +177,4 @@ public class MainActivityFragment extends Fragment {
             }
         }
     }
-
-
-
 }
