@@ -1,60 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>4
     <string-array name="item_titles">
-        <item>Title1</item>
-        <item>Title2</item>
-        <item>Title3</item>
-        <item>Title4</item>
-        <item>Title5</item>
-        <item>Title6</item>
-        <item>Title7</item>
-        <item>Title8</item>
-        <item>Title9</item>
-        <item>Title10</item>
-        <item>Title11</item>
-        <item>Title12</item>
-        <item>Title13</item>
-        <item>Title14</item>
-        <item>Title15</item>
-        <item>Title16</item>
+        <item>Suriyani</item>
+        <item>Rechado</item>
+        <item>Kovalam</item>
+        <item>Tikka Twist</item>
+        <item>Peri Peri</item>
+        <item>Kasuri Methi</item>
+        <item>Nizam-e-Khas</item>
+        <item>Creamy Ajwain</item>
+        <item>Peppy BBQ</item>
+        <item>Aai's Masala</item>
+        <item>Jaffna</item>
+        <item>Madras Magic</item>
+        <item>Kolkata Calling</item>
+        <item>Comint</item>
+        <item>Fresh Thai</item>
+        <item>Chilli Cheese</item>
+
+
+    </string-array>
+
+    <string-array name="item_subtitles">
+        <item>GOD'S OWN SPICE MIX</item>
+        <item>GOAN SIZZLE</item>
+        <item>KERALITE BEACH DELIGHT</item>
+        <item>PUNJAB DA PUNCH!</item>
+        <item>PORTUGUESE FIRE</item>
+        <item>A CLASSIC COMBO</item>
+        <item>MEMORIES FROM HYD’BAD</item>
+        <item>PROUDLY NORTH INDIAN</item>
+        <item>DARK AND DELICIOUS</item>
+        <item>COASTAL MAHARASHTRA</item>
+        <item>A SRI LANKAN SENSATION</item>
+        <item>CHENNAI SUPERSTAR</item>
+        <item>TASTE OF BENGAL</item>
+        <item>BURST OF FRESHNESS</item>
+        <item>AROMAS OF THAILAND</item>
+        <item>CREAMY TIDBITS</item>
     </string-array>
 
     <string-array name="item_descriptions">
-        <item>Description1</item>
-        <item>Description2</item>
-        <item>Description3</item>
-        <item>Description4</item>
-        <item>Description5</item>
-        <item>Description6</item>
-        <item>Description7</item>
-        <item>Description8</item>
-        <item>Description9</item>
-        <item>Description10</item>
-        <item>Description11</item>
-        <item>Description12</item>
-        <item>Description13</item>
-        <item>Description14</item>
-        <item>Description15</item>
-        <item>Description16</item>
+        <item>This one comes from Kerala's Syrian Christian aka Suriyani Kitchen. Fresh spices, including coriander, pepper and green cardamom, create a delicious whirl of taste.</item>
+        <item>This spicy-tangy Goan staple uses Kashmiri chillies, garlic, cumin and peppercorns, with tamarind playing a vital role in bringing out its robust and lively flavour.</item>
+        <item>Fresh curry leaves join hands with slivers of dried red chilly to create this refreshingly aromatic spicy dish rooted in coastal Kerala.</item>
+        <item>A spin on the iconic medium-spicy marinade concocted out of a blend of North Indian spices smoothened by fresh yogurt.</item>
+        <item>This fiery Portuguese sauce brings together pungent bird's eye chilles and garlic, pepper, white wine vinegar and olive oil to leave a sizzle you will love instantly.</item>
+        <item>The richness of freshly ground spices comes together with the pungent spike of green chilly and slightly bitter bite of dried fenugreek.</item>
+        <item>Inspired by Hyderabad’s iconic biryani, this marinade blends freshly ground garam masala, ginger, garlic and green chilly, tempered with fresh coriander, curd and lemon juice.</item>
+        <item>Ajwain, with its thyme-like aroma, is the king of this mix, ably complemented by the indulgent flavours of cream and yoghurt.</item>
+        <item>The classic chill-out companion in the form of a smoky in-house sauce. Remember the outdoors and the grills.</item>
+        <item>From Alibag’s coastal cuisine, comes this unique, flavourful and rich spice mixture blending more elements too numerous to be mentioned here!</item>
+        <item>Unique to Jaffna’s Sri Lankan Tamil cuisine for both seafood and meat curries, this spice mix involves blending individually dryroasted ingredients, to create a masala that is replete with flavour.</item>
+        <item>Aromatic and flavourful spices come together to create the quintessential Chettinad blend that leaves a delicious, lingering taste in your mouth...</item>
+        <item>This mild tempered marinade melding the pungency of mustard, spikes of green chillies and a hint of cumin reminds you of Kolkata in every bite.</item>
+        <item>Fragrant herbs, almost straight from the farm, go into flavouring this mild marinade, with a bit of chilly and ginger for that added punch.</item>
+        <item>Intensely aromatic lemon grass and the oh-so-spicy bird’s eye chilly get together with galangal and kaffir lime in this fresh, fragrant and fabulous offering.</item>
+        <item>Melt-in-your-mouth morsels concocted out of cream and cheese, uplifted with a hint of chilly and fresh coriander. A refreshing taste of chicken.</item>
     </string-array>
 
     <string-array name="item_prices">
-        <item>Price1</item>
-        <item>Price2</item>
-        <item>Price3</item>
-        <item>Price4</item>
-        <item>Price5</item>
-        <item>Price6</item>
-        <item>Price7</item>
-        <item>Price8</item>
-        <item>Price9</item>
-        <item>Price10</item>
-        <item>Price11</item>
-        <item>Price12</item>
-        <item>Price13</item>
-        <item>Price14</item>
-        <item>Price15</item>
-        <item>Price16</item>
+        <item>140.00</item>
+        <item>140.00</item>
+        <item>140.00</item>
+        <item>140.00</item>
+        <item>140.00</item>
+        <item>140.00</item>
+        <item>140.00</item>
+        <item>150.00</item>
+        <item>150.00</item>
+        <item>140.00</item>
+        <item>140.00</item>
+        <item>140.00</item>
+        <item>140.00</item>
+        <item>140.00</item>
+        <item>140.00</item>
+        <item>150.00</item>
 
     </string-array>
+
+    <string-array name="item_flavours1">
+        <item>Spicy</item>
+        <item>Spicy</item>
+        <item>Mild</item>
+        <item>Mild</item>
+        <item>Spicy</item>
+        <item>Mild</item>
+        <item>Mild</item>
+        <item>Mild</item>
+        <item>Mild</item>
+        <item>Spicy</item>
+        <item>Mild</item>
+        <item>Mild</item>
+        <item>Mild</item>
+        <item>Fresh Herbs</item>
+        <item>Spicy</item>
+        <item>Fresh Herbs</item>
+
+
+    </string-array>
+
+    <string-array name="item_flavours2">
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item>Fresh Herbs</item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item>Microwave</item>
+        <item>Fresh Herbs</item>
+        <item>Microwave</item>
+
+
+    </string-array>
+
 </resources>
