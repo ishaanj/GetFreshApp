@@ -1,4 +1,4 @@
-package getfresh.com.getfreshapplication;
+package getfresh.com.getfreshapplication.data;
 
 /**
  * Created by Ishaan on 6/18/2015.
