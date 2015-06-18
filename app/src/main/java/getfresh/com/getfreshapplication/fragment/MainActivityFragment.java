@@ -1,16 +1,20 @@
 package getfresh.com.getfreshapplication.fragment;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -86,13 +90,45 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+        final Cart temp = adapter.getItem(position);
 
-        cartList.add(adapter.getItem(position));
+        final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle("Please enter how many you would like");
 
-        if(listener != null) {
-            listener.onNewCartItemAddedListener(adapter.getItem(position));
-        }
+        final EditText input = new EditText(getActivity());
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setRawInputType(Configuration.KEYBOARD_12KEY);
+        input.setHint("0,1,2...");
+        alert.setView(input);
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                int count = Integer.parseInt(input.getText().toString());
+                if(count >= 0) {
+                    temp.setItemQuantity(count);
+                    adapter.updateCard(position, temp);
+
+                    if(cartList.contains(temp)) {
+                        cartList.remove(temp);
+                    }
+
+                    cartList.add(temp);
+
+                    if(listener != null) {
+                        listener.onNewCartItemAddedListener(adapter.getItem(position));
+                    }
+                }
+                else {
+                    Snackbar.make(input, "Only Positive numbers!", Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.dismiss();
+            }
+        });
+        alert.show();
     }
 
     private class ItemAdapter extends BaseAdapter {
@@ -120,6 +156,9 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
         private String[] itemSubtitles;
         private String[] itemFlavour1;
         private String[] itemFlavour2;
+
+        private Cart[] carts;
+
         private LayoutInflater inflater;
 
         public ItemAdapter() {
@@ -130,6 +169,11 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
             itemSubtitles = getActivity().getResources().getStringArray(R.array.item_subtitles);
             itemFlavour1 = getActivity().getResources().getStringArray(R.array.item_flavours1);
             itemFlavour2 = getActivity().getResources().getStringArray(R.array.item_flavours2);
+
+            carts = new Cart[itemTitles.length];
+            for(int i = 0; i < carts.length; i++) {
+                carts[i] = new Cart(itemTitles[i], itemPrices[i] + "");
+            }
         }
 
         @Override
@@ -143,12 +187,11 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
 
         @Override
         public Cart getItem(int position) {
+            return carts[position];
+        }
 
-            String name = itemTitles[position];
-            String price = itemPrices[position];
-            int quantity = 1;
-
-            return new Cart(name, price, quantity);
+        public void updateCard(int position, Cart cart) {
+            carts[position] = cart;
         }
 
         @Override
