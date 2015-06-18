@@ -9,17 +9,25 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
+
+import getfresh.com.getfreshapplication.Cart;
+import getfresh.com.getfreshapplication.OnNewCartItemAddedListener;
 import getfresh.com.getfreshapplication.R;
 
-public class MainActivityFragment extends Fragment {
+public class MainActivityFragment extends Fragment implements AdapterView.OnItemClickListener{
     private ListView lv;
     private boolean isLand;
     private ItemAdapter adapter;
+    private OnNewCartItemAddedListener onNewCartItemAddedListener;
+    private ArrayList<Cart> cart = new ArrayList<Cart>();
 
     public MainActivityFragment() { }
 
@@ -35,6 +43,18 @@ public class MainActivityFragment extends Fragment {
 
         lv = (ListView) v.findViewById(R.id.main_list);
         lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(this);
+
+        try{
+            onNewCartItemAddedListener = (OnNewCartItemAddedListener)getActivity();
+        }
+        catch (ClassCastException e){
+            System.out.println(e);
+        }
+
+        Toast.makeText(getActivity(),"Click on item to add to cart",Toast.LENGTH_SHORT).show();
+
         return v;
     }
 
@@ -46,6 +66,15 @@ public class MainActivityFragment extends Fragment {
             isLand = false;
         }
         return isLand;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        cart.add(adapter.getItem(position));
+
+        for(Cart c:cart)
+        System.out.println(c);
     }
 
     private class ItemAdapter extends BaseAdapter {
@@ -70,6 +99,9 @@ public class MainActivityFragment extends Fragment {
         private String[] itemTitles;
         private String[] itemDescriptions;
         private String[] itemPrices;
+        private String[] itemSubtitles;
+        private String[] itemFlavour1;
+        private String[] itemFlavour2;
         private LayoutInflater inflater;
 
         public ItemAdapter() {
@@ -77,6 +109,9 @@ public class MainActivityFragment extends Fragment {
             itemTitles = getActivity().getResources().getStringArray(R.array.item_titles);
             itemDescriptions = getActivity().getResources().getStringArray(R.array.item_descriptions);
             itemPrices = getActivity().getResources().getStringArray(R.array.item_prices);
+            itemSubtitles = getActivity().getResources().getStringArray(R.array.item_subtitles);
+            itemFlavour1 = getActivity().getResources().getStringArray(R.array.item_flavours1);
+            itemFlavour2 = getActivity().getResources().getStringArray(R.array.item_flavours2);
         }
 
         @Override
@@ -89,8 +124,14 @@ public class MainActivityFragment extends Fragment {
         }
 
         @Override
-        public Object getItem(int position) {
-            return null;
+        public Cart getItem(int position) {
+
+            String name = itemTitles[position];
+            String price = itemPrices[position];
+            int quantity = 1;
+
+            Cart temp = new Cart(name,price,quantity);
+            return temp;
         }
 
         @Override
@@ -116,6 +157,12 @@ public class MainActivityFragment extends Fragment {
             vh.title.setText(itemTitles[position]);
             vh.desc.setText(itemDescriptions[position]);
             vh.price.setText(itemPrices[position]);
+            vh.subtitle.setText(itemSubtitles[position]);
+
+            if(!itemFlavour2[position].equals(""))
+            vh.flavour1.setText(itemFlavour1[position] + "," + itemFlavour2[position]);
+            else
+            vh.flavour1.setText(itemFlavour1[position]);
 
             return v;
         }
@@ -161,13 +208,16 @@ public class MainActivityFragment extends Fragment {
             TextView title;
             TextView desc;
             TextView price;
+            TextView subtitle;
+            TextView flavour1;
 
             public ViewHolder(View v) {
                 img = (ImageView) v.findViewById(R.id.list_main_image);
                 title = (TextView) v.findViewById(R.id.list_main_title);
                 desc = (TextView) v.findViewById(R.id.list_main_description);
                 price = (TextView) v.findViewById(R.id.list_main_price);
-
+                subtitle = (TextView) v.findViewById(R.id.list_main_subtitle);
+                flavour1 = (TextView)v.findViewById(R.id.list_main_flavour1);
                 v.setTag(this);
             }
         }
