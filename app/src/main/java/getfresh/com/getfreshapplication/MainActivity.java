@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         //TODO: Remove logs before deploy
         Log.d(TAG, "Item added : " + cart.toString());
 
-        Snackbar.make(this.toolbar, cart.getItemName() + " Added To Cart", Snackbar.LENGTH_LONG)
+        Snackbar.make(this.toolbar, cart.getItemQuantity() + " " + cart.getItemName() + " Added To Cart", Snackbar.LENGTH_LONG)
                 .setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -146,11 +146,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                             cartList.remove(cartList.size() - 1);
                             setCartList();
                         }
-
-
                         Snackbar.make(toolbar, cart.getItemName() + " Removed From Cart", Snackbar.LENGTH_LONG).show();
-
-
                     }
                 }).show();
     }

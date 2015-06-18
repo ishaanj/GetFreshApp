@@ -9,6 +9,13 @@
         <item name="colorPrimary">#F06292</item>
         <item name="colorPrimaryDark">#E91E63</item>
         <item name="colorAccent">#F48FB1</item>
+        <item name="alertDialogTheme">@style/DialogTheme</item>
+    </style>
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert" >
+        <item name="colorAccent">#F48FB1</item>
+        <item name="android:textColorPrimary">#000000</item>
+        <item name="android:background">#FFFFFF</item>
     </style>
 
 </resources>

@@ -21,12 +21,20 @@ public class Cart {
     private String itemPrice;
     private int itemQuantity;
 
-    public Cart(String itemName, String itemPrice, int itemQuantity) {
+    public Cart(String itemName, String itemPrice) {
         this.itemName = itemName;
         this.itemPrice = itemPrice;
+    }
+
+    public void setItemQuantity(int itemQuantity) {
         this.itemQuantity = itemQuantity;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        Cart c = (Cart) o;
+        return this.itemName.equals(c.itemName);
+    }
 
     @Override
     public String toString() {
