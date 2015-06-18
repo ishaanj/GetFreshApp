@@ -146,7 +146,11 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                             cartList.remove(cartList.size() - 1);
                             setCartList();
                         }
+
+
                         Snackbar.make(toolbar, cart.getItemName() + " Removed From Cart", Snackbar.LENGTH_LONG).show();
+
+
                     }
                 }).show();
     }
