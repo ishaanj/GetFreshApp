@@ -9,17 +9,25 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
+
+import getfresh.com.getfreshapplication.Cart;
+import getfresh.com.getfreshapplication.OnNewCartItemAddedListener;
 import getfresh.com.getfreshapplication.R;
 
-public class MainActivityFragment extends Fragment {
+public class MainActivityFragment extends Fragment implements AdapterView.OnItemClickListener{
     private ListView lv;
     private boolean isLand;
     private ItemAdapter adapter;
+    private OnNewCartItemAddedListener onNewCartItemAddedListener;
+    private ArrayList<Cart> cart = new ArrayList<Cart>();
 
     public MainActivityFragment() { }
 
@@ -35,6 +43,18 @@ public class MainActivityFragment extends Fragment {
 
         lv = (ListView) v.findViewById(R.id.main_list);
         lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(this);
+
+        try{
+            onNewCartItemAddedListener = (OnNewCartItemAddedListener)getActivity();
+        }
+        catch (ClassCastException e){
+            System.out.println(e);
+        }
+
+        Toast.makeText(getActivity(),"Click on item to add to cart",Toast.LENGTH_SHORT).show();
+
         return v;
     }
 
@@ -46,6 +66,15 @@ public class MainActivityFragment extends Fragment {
             isLand = false;
         }
         return isLand;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        cart.add(adapter.getItem(position));
+
+        for(Cart c:cart)
+        System.out.println(c);
     }
 
     private class ItemAdapter extends BaseAdapter {
@@ -95,8 +124,14 @@ public class MainActivityFragment extends Fragment {
         }
 
         @Override
-        public Object getItem(int position) {
-            return null;
+        public Cart getItem(int position) {
+
+            String name = itemTitles[position];
+            String price = itemPrices[position];
+            int quantity = 1;
+
+            Cart temp = new Cart(name,price,quantity);
+            return temp;
         }
 
         @Override
