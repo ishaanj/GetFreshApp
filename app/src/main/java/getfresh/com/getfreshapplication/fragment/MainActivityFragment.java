@@ -1,11 +1,11 @@
 package getfresh.com.getfreshapplication.fragment;
 
+import android.app.Activity;
 import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,20 +14,20 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import getfresh.com.getfreshapplication.Cart;
-import getfresh.com.getfreshapplication.OnNewCartItemAddedListener;
 import getfresh.com.getfreshapplication.R;
+import getfresh.com.getfreshapplication.data.Cart;
 
 public class MainActivityFragment extends Fragment implements AdapterView.OnItemClickListener{
+    public static final String TAG = "MainActivityFragment";
     private ListView lv;
     private boolean isLand;
     private ItemAdapter adapter;
-    private OnNewCartItemAddedListener onNewCartItemAddedListener;
-    private ArrayList<Cart> cart = new ArrayList<Cart>();
+    private ArrayList<Cart> cartList = new ArrayList<Cart>();
+
+    private MainActivityFragmentListener listener;
 
     public MainActivityFragment() { }
 
@@ -46,16 +46,33 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
 
         lv.setOnItemClickListener(this);
 
-        try{
-            onNewCartItemAddedListener = (OnNewCartItemAddedListener)getActivity();
-        }
-        catch (ClassCastException e){
-            System.out.println(e);
-        }
-
-        Toast.makeText(getActivity(),"Click on item to add to cart",Toast.LENGTH_SHORT).show();
-
         return v;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        final Snackbar snackbar =  Snackbar.make(lv, "Click on item to add to cart", Snackbar.LENGTH_LONG);
+        snackbar.setAction("Dismiss", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        }).show();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            listener = (MainActivityFragmentListener) activity;
+        } catch(ClassCastException e) {
+            //TODO: Remove logs before deploy
+            Log.e(TAG, "Actitivy must implement OnNewCardOtemAddedListener ");
+            e.printStackTrace();
+        }
     }
 
     private boolean isLandscape() {
@@ -71,10 +88,11 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        cart.add(adapter.getItem(position));
+        cartList.add(adapter.getItem(position));
 
-        for(Cart c:cart)
-        System.out.println(c);
+        if(listener != null) {
+            listener.onNewCartItemAddedListener(adapter.getItem(position));
+        }
     }
 
     private class ItemAdapter extends BaseAdapter {
@@ -130,8 +148,7 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
             String price = itemPrices[position];
             int quantity = 1;
 
-            Cart temp = new Cart(name,price,quantity);
-            return temp;
+            return new Cart(name, price, quantity);
         }
 
         @Override
@@ -152,7 +169,7 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
                 v = convertView;
                 vh = (ViewHolder) v.getTag();
             }
-            
+
             vh.img.setImageResource(imageIds[position]);
             vh.title.setText(itemTitles[position]);
             vh.desc.setText(itemDescriptions[position]);
@@ -160,49 +177,13 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
             vh.subtitle.setText(itemSubtitles[position]);
 
             if(!itemFlavour2[position].equals(""))
-            vh.flavour1.setText(itemFlavour1[position] + "," + itemFlavour2[position]);
+                vh.flavour1.setText(itemFlavour1[position] + "," + itemFlavour2[position]);
             else
-            vh.flavour1.setText(itemFlavour1[position]);
+                vh.flavour1.setText(itemFlavour1[position]);
 
             return v;
         }
 
-        public Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
-            // First decode with inJustDecodeBounds=true to check dimensions
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeResource(res, resId, options);
-
-            // Calculate inSampleSize
-            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-            // Decode bitmap with inSampleSize set
-            options.inJustDecodeBounds = false;
-            return BitmapFactory.decodeResource(res, resId, options);
-        }
-
-        public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-            // Raw height and width of image
-            final int height = options.outHeight;
-            final int width = options.outWidth;
-            int inSampleSize = 1;
-
-            if (height > reqHeight || width > reqWidth) {
-
-                final int halfHeight = height / 2;
-                final int halfWidth = width / 2;
-
-                // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-                // height and width larger than the requested height and width.
-                while ((halfHeight / inSampleSize) > reqHeight
-                        && (halfWidth / inSampleSize) > reqWidth) {
-                    inSampleSize *= 2;
-                }
-            }
-
-            return inSampleSize;
-        }
-        
         private class ViewHolder {
             ImageView img;
             TextView title;
@@ -221,5 +202,17 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
                 v.setTag(this);
             }
         }
+    }
+
+    public interface MainActivityFragmentListener {
+        void onNewCartItemAddedListener(Cart cart);
+    }
+
+    public ArrayList<Cart> getCartList() {
+        return cartList;
+    }
+
+    public void setCartList(ArrayList<Cart> cart) {
+        this.cartList = cart;
     }
 }

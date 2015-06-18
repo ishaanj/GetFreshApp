@@ -20,7 +20,7 @@
         android:layout_below="@+id/list_main_image"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:layout_toLeftOf="@+id/list_main_price"
         android:layout_toStartOf="@+id/list_main_price" />
 
@@ -31,7 +31,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/list_main_title"
-        android:textSize="16dp" />
+        android:textSize="16sp" />
 
     <TextView
         android:layout_width="match_parent"
