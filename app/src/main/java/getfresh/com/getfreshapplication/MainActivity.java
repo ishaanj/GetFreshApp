@@ -3,7 +3,6 @@ package getfresh.com.getfreshapplication;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -17,6 +16,7 @@ import android.view.View;
 import java.util.ArrayList;
 
 import getfresh.com.getfreshapplication.data.Cart;
+import getfresh.com.getfreshapplication.fragment.CartFragment;
 import getfresh.com.getfreshapplication.fragment.MainActivityFragment;
 import getfresh.com.getfreshapplication.fragment.NavigationDrawerFragment;
 
@@ -25,7 +25,10 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
     private Toolbar toolbar;
     private ArrayList<Cart> cartList;
+    private CartArrayAdapter cartArrayAdapter;
     private MainActivityFragment mainActivityFragment;
+    private CartFragment cartFragment;
+    private double cartTotal;
 
     private static final String TAG = "MainAcitivity";
 
@@ -38,12 +41,13 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-    Fragment itemView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        cartList = new ArrayList<Cart>();
 
         toolbar = (Toolbar) findViewById(R.id.drawer_toolbar);
         setSupportActionBar(toolbar);
@@ -56,7 +60,10 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
-        itemView = new MainActivityFragment();
+        getFragmentManager().beginTransaction()
+                .hide(getFragmentManager().findFragmentById(R.id.cart_display))
+                .commit();
+
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
     }
@@ -68,9 +75,46 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
         if(position == 0) {
            mainActivityFragment = (mainActivityFragment == null)? new MainActivityFragment() : mainActivityFragment;
+
+            if(cartFragment != null)
+            getFragmentManager().beginTransaction()
+                    .hide(cartFragment)
+                    .commit();
+
             fragmentManager.beginTransaction()
                     .replace(R.id.container, mainActivityFragment)
                     .commit();
+        }
+
+        if(position == 1){
+            cartTotal = 0;
+            cartFragment = (cartFragment == null)? new CartFragment() : cartFragment;
+            cartArrayAdapter = new CartArrayAdapter(this,R.layout.fragment_cart,cartList);
+
+            cartFragment.setListAdapter(cartArrayAdapter);
+            cartArrayAdapter.notifyDataSetChanged();
+
+            if(mainActivityFragment != null)
+            fragmentManager.beginTransaction()
+                    .hide(mainActivityFragment)
+                    .commit();
+
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.container, cartFragment)
+                    .commit();
+
+            for(Cart c:cartList)
+                if(c !=null)
+                cartTotal += (double)c.getItemQuantity()*(Double.parseDouble(c.getItemPrice()));
+
+            final Snackbar s = Snackbar.make(this.toolbar,"Total : "+cartTotal,Snackbar.LENGTH_LONG);
+            s.setAction("DISMISS", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    s.dismiss();
+                }
+            })
+            .show();
         }
 
     }
@@ -134,6 +178,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     public void onNewCartItemAddedListener(final Cart cart) {
         //TODO: Remove logs before deploy
         Log.d(TAG, "Item added : " + cart.toString());
+
+        cartList.add(cart);
 
         Snackbar.make(this.toolbar, cart.getItemQuantity() + " " + cart.getItemName() + " Added To Cart", Snackbar.LENGTH_SHORT)
                 .setAction("UNDO", new View.OnClickListener() {

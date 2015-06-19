@@ -45,15 +45,15 @@
         android:layout_marginBottom="12dp" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/list_main_price"
-        android:textSize="20dp"
-        android:layout_above="@+id/list_main_subtitle"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:text="Large Text"
+    android:id="@+id/list_main_price"
+    android:textSize="20dp"
+    android:layout_above="@+id/list_main_subtitle"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true" />
 
     <TextView
         android:layout_width="match_parent"
