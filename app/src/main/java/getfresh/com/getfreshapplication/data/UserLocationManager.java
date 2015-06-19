@@ -1,12 +1,15 @@
 package getfresh.com.getfreshapplication.data;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
 import java.io.IOException;
@@ -16,13 +19,15 @@ import java.util.Locale;
 /**
  * Created by Yue on 6/19/2015.
  */
-public class UserLocationManager {
+public class UserLocationManager implements LocationListener{
 
     private Context context;
     private LocationManager manager;
 
     private Location lastKnownLocation;
     private List<Address> addressList;
+
+    private ProgressDialog pd;
 
     public UserLocationManager(Context context) {
         this.context = context;
@@ -63,41 +68,59 @@ public class UserLocationManager {
         return builder.create();
     }
 
-    public Location getLastKnownLocation() {
+    public void getLastKnownLocation() {
         if(manager != null && checkIfGPSIsEnabled()) {
-            lastKnownLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            return lastKnownLocation;
+            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+            if(listener != null)
+                listener.searchingForLocation();
         }
         else {
             if(listener != null)
                 listener.gpsDisabledWhenRequestingLastKnownLocation();
-            return lastKnownLocation;
         }
     }
 
-    public List<Address> getAddressFromLocation() {
-        getLastKnownLocation();
+    @Override
+    public void onLocationChanged(Location location) {
+        if(listener != null)
+            listener.searchForLocationEnded();
 
-        if(lastKnownLocation != null) {
-            Geocoder geo = new Geocoder(context, Locale.getDefault());
-            try {
-                addressList = geo.getFromLocation(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(), 5);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return addressList;
-        }
-        else {
+        manager.removeUpdates(this);
+        this.lastKnownLocation = location;
+
+        Geocoder geo = new Geocoder(context, Locale.getDefault());
+        try {
+            addressList = geo.getFromLocation(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(), 1);
+
             if(listener != null)
-                listener.noLastKnownLocationFound();
-            return null;
+                listener.addressObtained(addressList, location);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
     private UserLocationManagerListener listener;
     public interface UserLocationManagerListener {
         void gpsDisabledWhenRequestingLastKnownLocation();
-        void noLastKnownLocationFound();
+        void addressObtained(List<Address> list, Location location);
+        void searchingForLocation();
+        void searchForLocationEnded();
     }
 
     public void setListener(UserLocationManagerListener listener) {

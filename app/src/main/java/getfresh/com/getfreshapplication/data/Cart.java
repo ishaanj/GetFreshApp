@@ -38,10 +38,6 @@ public class Cart {
 
     @Override
     public String toString() {
-        return "Cart{" +
-                "itemName='" + itemName + '\'' +
-                ", itemPrice='" + itemPrice + '\'' +
-                ", itemQuantity=" + itemQuantity +
-                '}';
+        return itemName + "\tQuantity = " + itemQuantity + "\tPrice = " + (itemQuantity * Double.parseDouble(itemPrice));
     }
 }

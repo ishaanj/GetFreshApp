@@ -204,4 +204,19 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             mainActivityFragment.setCartList(cartList);
     }
 
+    @Override
+    protected void onPause() {
+        if(cartFragment != null) {
+            cartFragment.destroyProgressDialog();
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        if(cartFragment != null) {
+            cartFragment.destroyProgressDialog();
+        }
+        super.onStop();
+    }
 }
