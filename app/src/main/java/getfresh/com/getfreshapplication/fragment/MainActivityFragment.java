@@ -54,19 +54,6 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        final Snackbar snackbar =  Snackbar.make(lv, "Click on item to add to cart", Snackbar.LENGTH_SHORT);
-        snackbar.setAction("DISMISS", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                snackbar.dismiss();
-            }
-        }).show();
-    }
-
-    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
@@ -99,7 +86,7 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
         final EditText input = new EditText(getActivity());
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         input.setRawInputType(Configuration.KEYBOARD_12KEY);
-        input.setHint("0,1,2...");
+        input.setHint("1, 2, 3...");
         alert.setView(input);
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {

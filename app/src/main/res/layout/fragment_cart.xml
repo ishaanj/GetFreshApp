@@ -1,37 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:textAppearance="?android:attr/textAppearanceLarge"
-    android:textStyle="bold"
-    android:text="Large Text"
-    android:id="@+id/cart_item_title"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true"
-    android:textSize="20sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/cart_item_quantity"
-        android:textSize="20dp"
-        android:layout_toRightOf="@id/cart_item_title"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/cart_list"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        tools:listitem="@layout/fragment_cart_list_item"
+        android:background="#B0BEC5"
+        android:divider="#FFFFFF"
+        android:dividerHeight="4dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_above="@+id/cart_total" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
-        android:id="@+id/cart_item_price"
-        android:textSize="20dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
+        android:id="@+id/cart_total"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="8dp"
+        android:textSize="28dp" />
 </RelativeLayout>

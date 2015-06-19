@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
     private Toolbar toolbar;
     private ArrayList<Cart> cartList;
-    private CartArrayAdapter cartArrayAdapter;
     private MainActivityFragment mainActivityFragment;
     private CartFragment cartFragment;
     private double cartTotal;
@@ -60,10 +59,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
-        getFragmentManager().beginTransaction()
-                .hide(getFragmentManager().findFragmentById(R.id.cart_display))
-                .commit();
-
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
     }
@@ -74,47 +69,43 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         if(position == 0) {
-           mainActivityFragment = (mainActivityFragment == null)? new MainActivityFragment() : mainActivityFragment;
-
-            if(cartFragment != null)
-            getFragmentManager().beginTransaction()
-                    .hide(cartFragment)
-                    .commit();
+            if(mainActivityFragment == null) {
+                mainActivityFragment = new MainActivityFragment();
+            }
+            else {
+                fragmentManager.popBackStack();
+            }
 
             fragmentManager.beginTransaction()
                     .replace(R.id.container, mainActivityFragment)
                     .commit();
         }
+        else if(position == 1){
+            getCartList();
 
-        if(position == 1){
             cartTotal = 0;
             cartFragment = (cartFragment == null)? new CartFragment() : cartFragment;
-            cartArrayAdapter = new CartArrayAdapter(this,R.layout.fragment_cart,cartList);
+            cartFragment.setcList(cartList);
 
-            cartFragment.setListAdapter(cartArrayAdapter);
-            cartArrayAdapter.notifyDataSetChanged();
+            for(Cart c : cartList)
+                if(c != null)
+                    cartTotal += (double) c.getItemQuantity() * (Double.parseDouble(c.getItemPrice()));
 
-            if(mainActivityFragment != null)
-            fragmentManager.beginTransaction()
-                    .hide(mainActivityFragment)
-                    .commit();
+            cartFragment.setTotalResult(cartTotal);
 
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
+                    .addToBackStack("CartFragment")
                     .replace(R.id.container, cartFragment)
                     .commit();
 
-            for(Cart c:cartList)
-                if(c !=null)
-                cartTotal += (double)c.getItemQuantity()*(Double.parseDouble(c.getItemPrice()));
-
-            final Snackbar s = Snackbar.make(this.toolbar,"Total : "+cartTotal,Snackbar.LENGTH_LONG);
+            final Snackbar s = Snackbar.make(this.toolbar, "Total : " + cartTotal,Snackbar.LENGTH_LONG);
             s.setAction("DISMISS", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     s.dismiss();
                 }
             })
-            .show();
+                    .show();
         }
 
     }
@@ -179,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         //TODO: Remove logs before deploy
         Log.d(TAG, "Item added : " + cart.toString());
 
-        cartList.add(cart);
+        getCartList();
 
         Snackbar.make(this.toolbar, cart.getItemQuantity() + " " + cart.getItemName() + " Added To Cart", Snackbar.LENGTH_SHORT)
                 .setAction("UNDO", new View.OnClickListener() {
@@ -187,16 +178,12 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                     public void onClick(View v) {
                         getCartList();
 
-                        //This will remove the last item on the last, which is the most recent item added.
                         if (cartList != null) {
-                            cartList.remove(cartList.size() - 1);
+                            cartList.remove(cart);
                             setCartList();
                         }
 
-
                         Snackbar.make(toolbar, cart.getItemName() + " Removed From Cart", Snackbar.LENGTH_SHORT).show();
-
-
                     }
                 }).show();
     }
