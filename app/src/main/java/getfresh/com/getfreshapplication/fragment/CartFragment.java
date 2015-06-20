@@ -3,25 +3,19 @@ package getfresh.com.getfreshapplication.fragment;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.telephony.TelephonyManager;
-import android.text.InputType;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,19 +26,20 @@ import getfresh.com.getfreshapplication.R;
 import getfresh.com.getfreshapplication.data.Cart;
 import getfresh.com.getfreshapplication.data.EmailMessage;
 import getfresh.com.getfreshapplication.data.UserLocationManager;
+import getfresh.com.getfreshapplication.settings.SettingsActivity;
 
 /**
  * Created by Ishaan on 6/19/2015.
  */
 public class CartFragment extends Fragment implements UserLocationManager.UserLocationManagerListener{
 
-    public static final String PHONE_NO = "PHONE_NO";
-    public static final String USERNAME = "USERNAME";
-
-    public CartFragment() {  }
+    private static final String PHONE_NO = SettingsActivity.GetFreshPreferenceFragment.KEY_PHONE;
+    private static final String USERNAME = SettingsActivity.GetFreshPreferenceFragment.KEY_NAME;
+    private static final String ADDRESS = SettingsActivity.GetFreshPreferenceFragment.KEY_ADDRESS;
+    public  CartFragment() {  }
 
     private ListView lv;
-    private TextView itemTotalText;
+    private Button itemTotalText;
     private UserLocationManager manager;
 
     private CartArrayAdapter adapter;
@@ -71,7 +66,7 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_cart, container, false);
 
-        itemTotalText = (TextView) v.findViewById(R.id.cart_total);
+        itemTotalText = (Button) v.findViewById(R.id.cart_total);
         itemTotalText.setText("Total \u20B9 " + totalResult);
 
         itemTotalText.setOnClickListener(new View.OnClickListener() {
@@ -130,105 +125,31 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
 
     private String no;
     private String name;
+    private String address;
 
     @Override
     public void addressObtained(final List<Address> list, final Location location) {
-        TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        no = tMgr.getLine1Number();
-
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        name = sp.getString(USERNAME, "ABC");
+        name = sp.getString(USERNAME, "");
+        address = sp.getString(ADDRESS, "");
+        no = sp.getString(PHONE_NO, "");
 
-        if(TextUtils.isEmpty(no)) {
-            no = sp.getString(PHONE_NO, "");
+        final EmailMessage.Builder builder = new EmailMessage.Builder(list.get(0))
+                .setName(name)
+                .setPhoneNumber(no)
+                .setAddressLine(address)
+                .setTotalPrice(totalResult + "")
+                .setSubject()
+                .setCartList(getcList())
+                .setLat(location.getLatitude() + "")
+                .setLon(location.getLongitude() + "")
+                .setFeatureName()
+                .setPostalCode()
+                .setLocality()
+                .setSubLocality();
 
-            if(TextUtils.isEmpty(no)) {
-                final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                alert.setTitle("Please enter your Phone No");
-
-                final EditText input = new EditText(getActivity());
-                input.setInputType(InputType.TYPE_CLASS_PHONE);
-                input.setRawInputType(Configuration.KEYBOARD_12KEY);
-                alert.setView(input);
-                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        if(!TextUtils.isEmpty(input.getText().toString())) {
-                            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                            sp.edit().putString(PHONE_NO, input.getText().toString()).commit();
-
-                            no = input.getText().toString();
-                            EmailMessage email = new EmailMessage.Builder(list.get(0))
-                                    .setName(name)
-                                    .setSubject("SUBJECT 1")
-                                    .setTotalPrice(totalResult + "")
-                                    .setPhoneNumber(no)
-                                    .setLat(location.getLatitude() + "")
-                                    .setLon(location.getLongitude() + "")
-                                    .setCartList(getcList())
-                                    .setAddressLine()
-                                    .setFeatureName()
-                                    .setPostalCode()
-                                    .setLocality()
-                                    .setSubLocality()
-                                    .build();
-
-                            Intent sender = email.createEmailIntent();
-                            getActivity().startActivity(sender);
-                        }
-                        else {
-                            Snackbar.make(input, "Phone number is required", Snackbar.LENGTH_LONG).show();
-                        }
-                    }
-                });
-                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.dismiss();
-                        return;
-                    }
-                });
-                alert.show();
-            }
-            else {
-                EmailMessage email = new EmailMessage.Builder(list.get(0))
-                        .setName(name)
-                        .setSubject("SUBJECT 1")
-                        .setTotalPrice(totalResult + "")
-                        .setPhoneNumber(no)
-                        .setLat(location.getLatitude() + "")
-                        .setLon(location.getLongitude() + "")
-                        .setCartList(getcList())
-                        .setAddressLine()
-                        .setFeatureName()
-                        .setPostalCode()
-                        .setLocality()
-                        .setSubLocality()
-                        .build();
-
-                Intent sender = email.createEmailIntent();
-                getActivity().startActivity(sender);
-            }
-        }
-        else {
-            EmailMessage email = new EmailMessage.Builder(list.get(0))
-                    .setName(name)
-                    .setSubject("SUBJECT 1")
-                    .setTotalPrice(totalResult + "")
-                    .setPhoneNumber(no)
-                    .setLat(location.getLatitude() + "")
-                    .setLon(location.getLongitude() + "")
-                    .setCartList(getcList())
-                    .setAddressLine()
-                    .setFeatureName()
-                    .setPostalCode()
-                    .setLocality()
-                    .setSubLocality()
-                    .build();
-
-            Intent sender = email.createEmailIntent();
-            getActivity().startActivity(sender);
-        }
-
-
+        Intent x = builder.build().createEmailIntent();
+        getActivity().startActivity(x);
     }
 
     public void destroyProgressDialog() {

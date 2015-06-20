@@ -126,15 +126,7 @@ public class EmailMessage {
             return this;
         }
 
-        public Builder setSubject(String tag) {
-            /*Calendar c = Calendar.getInstance();
-            int hour = c.get(Calendar.HOUR);
-            int min = c.get(Calendar.MINUTE);
-            int sec = c.get(Calendar.SECOND);
-
-            int date = c.get(Calendar.DATE);
-            int month = c.get(Calendar.MONTH);
-            int year = c.get(Calendar.YEAR);*/
+        public Builder setSubject() {
             DateFormat d = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSS");
             String stamp = d.format(Calendar.getInstance().getTime());
 
@@ -147,12 +139,8 @@ public class EmailMessage {
             return this;
         }
 
-        public Builder setAddressLine() {
-            StringBuilder sb = new StringBuilder();
-            for(int i = 0; i < location.getMaxAddressLineIndex(); i++) {
-                sb.append(location.getAddressLine(i));
-            }
-            addressLine = sb.toString();
+        public Builder setAddressLine(String address) {
+            addressLine = address;
             return this;
         }
 

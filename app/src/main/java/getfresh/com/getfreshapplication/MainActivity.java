@@ -1,7 +1,10 @@
 package getfresh.com.getfreshapplication;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +22,7 @@ import getfresh.com.getfreshapplication.data.Cart;
 import getfresh.com.getfreshapplication.fragment.CartFragment;
 import getfresh.com.getfreshapplication.fragment.MainActivityFragment;
 import getfresh.com.getfreshapplication.fragment.NavigationDrawerFragment;
+import getfresh.com.getfreshapplication.settings.SettingsActivity;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks, MainActivityFragment.MainActivityFragmentListener{
@@ -47,6 +51,12 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         setContentView(R.layout.activity_main);
 
         cartList = new ArrayList<Cart>();
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if(!sp.getBoolean(LoginActivity.KEY_LOGIN_VISITED, false)) {
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+        }
 
         toolbar = (Toolbar) findViewById(R.id.drawer_toolbar);
         setSupportActionBar(toolbar);
@@ -106,6 +116,10 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 }
             })
                     .show();
+        }
+        else if(position == 2) {
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivity(i);
         }
 
     }
