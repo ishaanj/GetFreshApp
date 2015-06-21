@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by Yue on 6/19/2015.
+ * Created by Somshubra on 6/19/2015.
+ * @author Somshubra
  */
 public class UserLocationManager implements LocationListener{
 

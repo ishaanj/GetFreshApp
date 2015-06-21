@@ -3,6 +3,7 @@ package getfresh.com.getfreshapplication.fragment;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Address;
@@ -11,9 +12,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -30,6 +33,8 @@ import getfresh.com.getfreshapplication.settings.SettingsActivity;
 
 /**
  * Created by Ishaan on 6/19/2015.
+ * @author Ishaan
+ * @author Somshubra
  */
 public class CartFragment extends Fragment implements UserLocationManager.UserLocationManagerListener{
 
@@ -38,13 +43,16 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
     private static final String ADDRESS = SettingsActivity.GetFreshPreferenceFragment.KEY_ADDRESS;
     public  CartFragment() {  }
 
-    private ListView lv;
     private Button itemTotalText;
     private UserLocationManager manager;
+    private AlertDialog alert;
+    private boolean isDiscounted = false;
+    private int discountCode;
 
+    private ListView lv;
     private CartArrayAdapter adapter;
     private ArrayList<Cart> cList;
-    private AlertDialog alert;
+    private CartFragmentListener listener;
 
     private double totalResult;
     private ProgressDialog pd;
@@ -60,6 +68,12 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
+        try {
+            listener = (CartFragmentListener) activity;
+        } catch (ClassCastException e) {
+            Log.e("CartFragment", "Activity must implement the CartFragmentListener");
+        }
     }
 
     @Override
@@ -67,7 +81,13 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
         View v = inflater.inflate(R.layout.fragment_cart, container, false);
 
         itemTotalText = (Button) v.findViewById(R.id.cart_total);
-        itemTotalText.setText("Total \u20B9 " + totalResult);
+        if(isDiscounted) {
+            itemTotalText.setText("Total (Discount) \u20B9 " + totalResult);
+        }
+        else {
+            itemTotalText.setText("Total \u20B9 " + totalResult);
+        }
+
 
         itemTotalText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,9 +109,45 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
         lv = (ListView) v.findViewById(R.id.cart_list);
         adapter = new CartArrayAdapter(getActivity(), cList);
 
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final Cart c = adapter.getItem(position);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Remove from Cart")
+                        .setMessage("Do you wish to remove " + c.getItemName() + " from the cart?")
+                        .setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                cList.remove(c);
+                                adapter.setCartList(cList);
+
+                                if(listener != null)
+                                    listener.cartListUpdated(cList);
+                            }
+                        })
+                        .setNegativeButton("Don't Remove", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        });
+
         lv.setAdapter(adapter);
 
         return v;
+    }
+
+    public void setIsDiscounted(boolean isDiscounted) {
+        this.isDiscounted = isDiscounted;
+    }
+
+    public void setDiscountCode(int discountCode) {
+        this.discountCode = discountCode;
     }
 
     @Override
@@ -146,7 +202,9 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                 .setFeatureName()
                 .setPostalCode()
                 .setLocality()
-                .setSubLocality();
+                .setSubLocality()
+                .setIsDiscounted(isDiscounted?"true" : "false")
+                .setDiscountCode(discountCode + "");
 
         Intent x = builder.build().createEmailIntent();
         getActivity().startActivity(x);
@@ -162,7 +220,7 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
     @Override
     public void searchingForLocation() {
         if(getActivity() != null)
-            pd = ProgressDialog.show(getActivity(), "Getting the current location", "Please wait while we get your location", true, false);
+            pd = ProgressDialog.show(getActivity(), "Getting the current location", "Please wait while we get your location", true);
     }
 
     @Override
@@ -181,6 +239,11 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
         public CartArrayAdapter(Context context, ArrayList<Cart> cartlist) {
             this.cartList = cartlist;
             inflater = LayoutInflater.from(context);
+        }
+
+        public void setCartList(ArrayList<Cart> cartList) {
+            this.cartList = cartList;
+            notifyDataSetChanged();
         }
 
         @Override
@@ -238,6 +301,10 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                 v.setTag(this);
             }
         }
+    }
+
+    public interface CartFragmentListener {
+        void cartListUpdated(ArrayList<Cart> list);
     }
 
 }

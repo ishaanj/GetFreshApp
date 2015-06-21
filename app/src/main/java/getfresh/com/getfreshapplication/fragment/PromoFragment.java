@@ -20,28 +20,39 @@ import getfresh.com.getfreshapplication.data.Cart;
 
 /**
  * Created by Ishaan on 6/21/2015.
+ * @author Ishaan
+ * @author Somshubra
  */
 public class PromoFragment extends Fragment implements AdapterView.OnItemClickListener {
 
-    private static int CODE_APPLIED = 0;
+    private static int CODE_APPLIED = -1;
     private ListView lv;
     private PromoArrayAdapter promoArrayAdapter;
     private ArrayList<Cart> cartArrayList;
     private double cartTotal;
-    private String code;
+    private int code;
+    private int noOfItems;
 
-    public void setCartArrayList(ArrayList<Cart> cartArrayList,double total) {
+    public void setCartArrayList(ArrayList<Cart> cartArrayList, double total) {
         this.cartArrayList = cartArrayList;
         cartTotal = total;
-    }
+        noOfItems = 0;
 
+        for(int i = 0; i < cartArrayList.size(); i++) {
+            noOfItems += cartArrayList.get(i).getItemQuantity();
+        }
+    }
 
     public double getCartTotal() {
         return cartTotal;
     }
 
+    public void setCartTotal(double cartTotal) {
+        this.cartTotal = cartTotal;
+    }
+
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
@@ -61,58 +72,57 @@ public class PromoFragment extends Fragment implements AdapterView.OnItemClickLi
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-
-        if (CODE_APPLIED == 0){
+    public void onItemClick(AdapterView<?> parent, View v, final int position, long id) {
+        if (CODE_APPLIED == -1) {
+            if(noOfItems == 0) {
+                Snackbar.make(v, "Add at least 1 item to the cart", Snackbar.LENGTH_LONG).show();
+                return;
+            }
 
             code = promoArrayAdapter.getItem(position);
-            if(code.equalsIgnoreCase(promoArrayAdapter.getItem(0)))
-            {
-                cartTotal = cartTotal * 90 / 100;
-                CODE_APPLIED++;
-                Snackbar.make(view,"Code "+code+" applied",Snackbar.LENGTH_SHORT).show();
-            }
-            else if(code.equalsIgnoreCase(promoArrayAdapter.getItem(1)))
-            {
-                if (cartArrayList.size() > 5) {
-                    cartTotal = cartTotal * 80 / 100;
-                    CODE_APPLIED++;
-                    Snackbar.make(view,"Code "+code+" applied",Snackbar.LENGTH_SHORT).show();
-                }
-                else
-                    Snackbar.make(view,"Cart does not have 5 items",Snackbar.LENGTH_LONG).show();
-            }
-
+            validatePromo(v, position);
         }
+        else {
+            if(noOfItems == 0) {
+                Snackbar.make(v, "Add at least 1 item to the cart", Snackbar.LENGTH_LONG).show();
+                return;
+            }
 
-        else if(CODE_APPLIED == 1){
-            if(code.equalsIgnoreCase(promoArrayAdapter.getItem(position)))
-            Snackbar.make(view,"Code "+code+" already applied",Snackbar.LENGTH_SHORT).show();
+            final String codeName = promoArrayAdapter.getPromo_desc()[position];
 
+            if (CODE_APPLIED == position)
+                Snackbar.make(v, "Code " + codeName + " already applied", Snackbar.LENGTH_SHORT).show();
             else {
-                Snackbar.make(view, "Replace " + code + " with " + promoArrayAdapter.getItem(position) + "?", Snackbar.LENGTH_LONG)
+                Snackbar.make(v, "Replace " + codeName + " with " + promoArrayAdapter.getPromo_desc()[position] + "?", Snackbar.LENGTH_LONG)
                         .setAction("Yes", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                code = promoArrayAdapter.getItem(position);
-                                if(code.equalsIgnoreCase(promoArrayAdapter.getItem(0)))
-                                {
-                                    cartTotal = cartTotal * 90 / 100;
-                                    CODE_APPLIED++;
-                                    Snackbar.make(v,"Code "+code+" applied",Snackbar.LENGTH_SHORT).show();
-                                }
-                                else if(code.equalsIgnoreCase(promoArrayAdapter.getItem(1)))
-                                {
-                                    if (cartArrayList.size() > 5) {
-                                        cartTotal = cartTotal * 80 / 100;
-                                        CODE_APPLIED++;
-                                        Snackbar.make(v,"Code "+code+" applied",Snackbar.LENGTH_SHORT).show();
-                                    }
-                                    else
-                                        Snackbar.make(v,"Cart does not have 5 items",Snackbar.LENGTH_LONG).show();
-                                }
+                                validatePromo(v, position);
                             }
                         }).show();
+            }
+        }
+    }
+
+    public void validatePromo(View v) {
+        validatePromo(v, CODE_APPLIED);
+    }
+
+    private void validatePromo(View v, int position) {
+        if(position != -1) {
+            final String codeName = promoArrayAdapter.getPromo_desc()[position];
+
+            if (position == 0) {
+                cartTotal = cartTotal * 0.9;
+                CODE_APPLIED = position;
+                Snackbar.make(v, "Code " + codeName + " applied", Snackbar.LENGTH_SHORT).show();
+            } else if (position == 1) {
+                if (noOfItems >= 5) {
+                    cartTotal = cartTotal * 0.8;
+                    CODE_APPLIED = position;
+                    Snackbar.make(v, "Code " + codeName + " applied", Snackbar.LENGTH_SHORT).show();
+                } else
+                    Snackbar.make(v, "Cart does not have 5 items", Snackbar.LENGTH_LONG).show();
             }
         }
     }
@@ -130,14 +140,18 @@ public class PromoFragment extends Fragment implements AdapterView.OnItemClickLi
             promo_title = getActivity().getResources().getStringArray(R.array.promo_code);
         }
 
+        public String[] getPromo_desc() {
+            return promo_desc;
+        }
+
         @Override
         public int getCount() {
             return promo_title.length;
         }
 
         @Override
-        public String getItem(int position) {
-            return promo_title[position];
+        public Integer getItem(int position) {
+            return position;
         }
 
         @Override

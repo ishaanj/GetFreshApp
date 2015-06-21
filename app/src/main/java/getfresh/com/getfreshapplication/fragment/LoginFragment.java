@@ -17,6 +17,9 @@ import getfresh.com.getfreshapplication.LoginActivity;
 import getfresh.com.getfreshapplication.R;
 import getfresh.com.getfreshapplication.settings.SettingsActivity;
 
+/**
+ * @author Somshubra
+ */
 public class LoginFragment extends Fragment {
 
     private EditText name, phone, address;

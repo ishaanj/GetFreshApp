@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -24,8 +23,10 @@ import java.util.ArrayList;
 
 import getfresh.com.getfreshapplication.R;
 import getfresh.com.getfreshapplication.data.Cart;
-import getfresh.com.getfreshapplication.settings.SettingsActivity;
 
+/**
+ * @author Somshubra
+ */
 public class MainActivityFragment extends Fragment implements AdapterView.OnItemClickListener{
     public static final String TAG = "MainActivityFragment";
     private ListView lv;
@@ -71,8 +72,8 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void onStart() {
         super.onStart();
-        String name = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingsActivity.GetFreshPreferenceFragment.KEY_NAME, "");
-        Snackbar.make(lv, "Welcome back, " + name, Snackbar.LENGTH_SHORT).show();
+        //String name = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingsActivity.GetFreshPreferenceFragment.KEY_NAME, "");
+        //Snackbar.make(lv, "Welcome back, " + name, Snackbar.LENGTH_SHORT).show();
     }
 
     private boolean isLandscape() {

@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * Created by Yue on 6/19/2015.
+ * Created by Somshubra on 6/19/2015.
+ * @author Somshubra
  */
 public class EmailMessage {
 
@@ -51,6 +52,8 @@ public class EmailMessage {
         private String postalCode;
         private String subLocality;
         private String lat, lon;
+        private String isDiscounted;
+        private String discountCode;
 
         public Builder(Address location) {
             this.location = location;
@@ -81,7 +84,7 @@ public class EmailMessage {
             }
 
             if(!TextUtils.isEmpty(featureName)) {
-                sb.append("Feature Name : " + featureName + "\n");
+                sb.append("\nFeature Name : " + featureName + "\n");
             }
 
             if(!TextUtils.isEmpty(locality)) {
@@ -103,7 +106,15 @@ public class EmailMessage {
             }
 
             if(!TextUtils.isEmpty(totalPrice)) {
-                sb.append("\n\n Total Price : " + totalPrice);
+                sb.append("\n\n Total Price : " + totalPrice + "\n");
+            }
+
+            if(!TextUtils.isEmpty(isDiscounted)) {
+                sb.append("Is the price discounted : " + isDiscounted + "\n");
+            }
+
+            if(!TextUtils.isEmpty(discountCode) && isDiscounted.equalsIgnoreCase("true")) {
+                sb.append("Discount Code : " + discountCode);
             }
 
             email.message = sb.toString();
@@ -171,6 +182,16 @@ public class EmailMessage {
 
         public Builder setLon(String lon) {
             this.lon = lon;
+            return this;
+        }
+
+        public Builder setIsDiscounted(String isDiscounted) {
+            this.isDiscounted = isDiscounted;
+            return this;
+        }
+
+        public Builder setDiscountCode(String discountCode) {
+            this.discountCode = discountCode;
             return this;
         }
     }

@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 import getfresh.com.getfreshapplication.R;
 
+/**
+ * @author Somshubra
+ */
 public class SettingsActivity extends Activity {
 
     @Override

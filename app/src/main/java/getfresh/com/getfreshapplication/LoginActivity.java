@@ -7,6 +7,9 @@ import android.view.MenuItem;
 
 import getfresh.com.getfreshapplication.fragment.LoginFragment;
 
+/**
+ * @author Somshubra
+ */
 public class LoginActivity extends AppCompatActivity {
 
     public static final String KEY_LOGIN_VISITED = "LOGIN_VISITED";

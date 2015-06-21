@@ -5,8 +5,8 @@
     <string name="title_activity_settings">Settings</string>
     <string name="title_section1">Home</string>
     <string name="title_section2">Cart</string>
-    <string name="title_section3">Settings</string>
-    <string name="title_section4">Promotions</string>
+    <string name="title_section3">Promotions</string>
+    <string name="title_section4">Settings</string>Settings
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>

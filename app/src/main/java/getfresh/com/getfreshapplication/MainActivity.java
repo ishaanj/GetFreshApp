@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,8 +24,12 @@ import getfresh.com.getfreshapplication.fragment.NavigationDrawerFragment;
 import getfresh.com.getfreshapplication.fragment.PromoFragment;
 import getfresh.com.getfreshapplication.settings.SettingsActivity;
 
-
-public class MainActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks, MainActivityFragment.MainActivityFragmentListener{
+/**
+ * @author Ishaan
+ * @author Somshubra
+ */
+public class MainActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,
+        MainActivityFragment.MainActivityFragmentListener, CartFragment.CartFragmentListener {
 
     private Toolbar toolbar;
     private ArrayList<Cart> cartList;
@@ -79,13 +82,11 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.executePendingTransactions();
 
         if(position == 0) {
             if(mainActivityFragment == null) {
                 mainActivityFragment = new MainActivityFragment();
-            }
-            else {
-                fragmentManager.popBackStack();
             }
 
             fragmentManager.beginTransaction()
@@ -96,42 +97,62 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             getCartList();
 
             cartTotal = 0;
+            cartFragment = (cartFragment == null) ? new CartFragment() : cartFragment;
 
-            if(promoFragment == null || promoFragment.getCartTotal() == 0) {
-                cartFragment = (cartFragment == null) ? new CartFragment() : cartFragment;
-                cartFragment.setcList(cartList);
+            for (Cart c : cartList)
+                if (c != null)
+                    cartTotal += (double) c.getItemQuantity() * (Double.parseDouble(c.getItemPrice()));
 
-                for (Cart c : cartList)
-                    if (c != null)
-                        cartTotal += (double) c.getItemQuantity() * (Double.parseDouble(c.getItemPrice()));
+            if(promoFragment != null) {
+                promoFragment.setCartArrayList(cartList, cartTotal);
+                promoFragment.validatePromo(toolbar);
 
-                cartFragment.setTotalResult(cartTotal);
-            }
-            else {
                 cartTotal = promoFragment.getCartTotal();
-                cartFragment.setTotalResult(cartTotal);
+                cartFragment.setIsDiscounted(true);
             }
+
+            cartFragment.setcList(cartList);
+            cartFragment.setTotalResult(cartTotal);
+
+            getSupportFragmentManager().popBackStackImmediate();
             getSupportFragmentManager().beginTransaction()
-                    .addToBackStack("CartFragment")
+                    .addToBackStack(null)
                     .replace(R.id.container, cartFragment)
                     .commit();
 
         }
-        else if(position == 2) {
-            Intent i = new Intent(this, SettingsActivity.class);
-            startActivity(i);
-        }
-        else if(position == 3){
-            promoFragment = (promoFragment == null)? new PromoFragment():promoFragment;
+        else if(position == 2){
+            if(promoFragment == null)
+                promoFragment = new PromoFragment();
 
+            getCartList();
+            cartTotal = 0;
+
+            for (Cart c : cartList)
+                if (c != null)
+                    cartTotal += (double) c.getItemQuantity() * (Double.parseDouble(c.getItemPrice()));
 
             promoFragment.setCartArrayList(cartList, cartTotal);
 
+            getSupportFragmentManager().popBackStackImmediate();
             fragmentManager.beginTransaction()
+                    .addToBackStack(null)
                     .replace(R.id.container, promoFragment)
                     .commit();
         }
+        else if(position == 3) {
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivity(i);
+        }
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        String name = PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.GetFreshPreferenceFragment.KEY_NAME, "");
+        Snackbar.make(toolbar, "Welcome back, " + name, Snackbar.LENGTH_SHORT).show();
     }
 
     public void onSectionAttached(int number) {
@@ -193,9 +214,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
      */
     @Override
     public void onNewCartItemAddedListener(final Cart cart) {
-        //TODO: Remove logs before deploy
-        Log.d(TAG, "Item added : " + cart.toString());
-
         getCartList();
 
         Snackbar.make(this.toolbar, cart.getItemQuantity() + " " + cart.getItemName() + " Added To Cart", Snackbar.LENGTH_SHORT)
@@ -228,6 +246,12 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     private void setCartList() {
         if(mainActivityFragment != null)
             mainActivityFragment.setCartList(cartList);
+    }
+
+    @Override
+    public void cartListUpdated(ArrayList<Cart> list) {
+        cartList = list;
+        setCartList();
     }
 
     @Override

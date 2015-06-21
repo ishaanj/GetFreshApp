@@ -2,6 +2,8 @@ package getfresh.com.getfreshapplication.data;
 
 /**
  * Created by Ishaan on 6/18/2015.
+ * @author Ishaan
+ * @author Somshubra
  */
 public class Cart {
 
