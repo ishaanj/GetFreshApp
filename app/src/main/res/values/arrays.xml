@@ -121,4 +121,14 @@
 
     </string-array>
 
+
+    <string-array name="promo_code">
+        <item>FF22</item>
+        <item>C1B1</item>
+    </string-array>
+
+    <string-array name="promo_desc">
+        <item>Get flat 10% off on total cart</item>
+        <item>Get 20% off on total cart if number of items is greater than 5</item>
+    </string-array>
 </resources>

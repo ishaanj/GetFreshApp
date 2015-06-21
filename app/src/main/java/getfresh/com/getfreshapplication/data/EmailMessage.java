@@ -16,7 +16,7 @@ import java.util.Calendar;
 public class EmailMessage {
 
     //Set your uncles email address here
-    private static final String emailAddress = "abc@gmail.com";
+    private static final String emailAddress = "ishjain321@gmail.com";
 
     private String subject;
     private String message;

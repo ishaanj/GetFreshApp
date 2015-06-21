@@ -22,6 +22,7 @@ import getfresh.com.getfreshapplication.data.Cart;
 import getfresh.com.getfreshapplication.fragment.CartFragment;
 import getfresh.com.getfreshapplication.fragment.MainActivityFragment;
 import getfresh.com.getfreshapplication.fragment.NavigationDrawerFragment;
+import getfresh.com.getfreshapplication.fragment.PromoFragment;
 import getfresh.com.getfreshapplication.settings.SettingsActivity;
 
 
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     private ArrayList<Cart> cartList;
     private MainActivityFragment mainActivityFragment;
     private CartFragment cartFragment;
+    private PromoFragment promoFragment;
     private double cartTotal;
 
     private static final String TAG = "MainAcitivity";
@@ -121,6 +123,13 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             Intent i = new Intent(this, SettingsActivity.class);
             startActivity(i);
         }
+        else if(position == 3){
+            promoFragment = (promoFragment == null)? new PromoFragment():promoFragment;
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, promoFragment)
+                    .commit();
+        }
 
     }
 
@@ -135,6 +144,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             case 3:
                 mTitle = getString(R.string.title_section3);
                 break;
+            case 4:
+                mTitle = getString(R.string.title_section4);
         }
     }
 
