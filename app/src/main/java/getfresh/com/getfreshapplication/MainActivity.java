@@ -96,28 +96,26 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             getCartList();
 
             cartTotal = 0;
-            cartFragment = (cartFragment == null)? new CartFragment() : cartFragment;
-            cartFragment.setcList(cartList);
 
-            for(Cart c : cartList)
-                if(c != null)
-                    cartTotal += (double) c.getItemQuantity() * (Double.parseDouble(c.getItemPrice()));
+            if(promoFragment == null || promoFragment.getCartTotal() == 0) {
+                cartFragment = (cartFragment == null) ? new CartFragment() : cartFragment;
+                cartFragment.setcList(cartList);
 
-            cartFragment.setTotalResult(cartTotal);
+                for (Cart c : cartList)
+                    if (c != null)
+                        cartTotal += (double) c.getItemQuantity() * (Double.parseDouble(c.getItemPrice()));
 
+                cartFragment.setTotalResult(cartTotal);
+            }
+            else {
+                cartTotal = promoFragment.getCartTotal();
+                cartFragment.setTotalResult(cartTotal);
+            }
             getSupportFragmentManager().beginTransaction()
                     .addToBackStack("CartFragment")
                     .replace(R.id.container, cartFragment)
                     .commit();
 
-            final Snackbar s = Snackbar.make(this.toolbar, "Total : " + cartTotal,Snackbar.LENGTH_LONG);
-            s.setAction("DISMISS", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    s.dismiss();
-                }
-            })
-                    .show();
         }
         else if(position == 2) {
             Intent i = new Intent(this, SettingsActivity.class);
@@ -125,6 +123,9 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         }
         else if(position == 3){
             promoFragment = (promoFragment == null)? new PromoFragment():promoFragment;
+
+
+            promoFragment.setCartArrayList(cartList, cartTotal);
 
             fragmentManager.beginTransaction()
                     .replace(R.id.container, promoFragment)
