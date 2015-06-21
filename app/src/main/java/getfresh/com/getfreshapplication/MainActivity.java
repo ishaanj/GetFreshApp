@@ -114,7 +114,9 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             cartFragment.setcList(cartList);
             cartFragment.setTotalResult(cartTotal);
 
-            getSupportFragmentManager().popBackStackImmediate();
+            try {
+                getSupportFragmentManager().popBackStackImmediate();
+            } catch (Exception e) {}
             getSupportFragmentManager().beginTransaction()
                     .addToBackStack(null)
                     .replace(R.id.container, cartFragment)
@@ -134,7 +136,9 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
             promoFragment.setCartArrayList(cartList, cartTotal);
 
-            getSupportFragmentManager().popBackStackImmediate();
+            try {
+                getSupportFragmentManager().popBackStackImmediate();
+            } catch (Exception e) {}
             fragmentManager.beginTransaction()
                     .addToBackStack(null)
                     .replace(R.id.container, promoFragment)
