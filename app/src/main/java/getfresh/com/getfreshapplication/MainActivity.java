@@ -109,6 +109,9 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
                 cartTotal = promoFragment.getCartTotal();
                 cartFragment.setIsDiscounted(true);
+
+                int pCode = promoFragment.getCodeApplied();
+                cartFragment.setDiscountCode(pCode);
             }
 
             cartFragment.setcList(cartList);

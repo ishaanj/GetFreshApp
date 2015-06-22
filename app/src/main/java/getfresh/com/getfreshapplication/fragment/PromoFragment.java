@@ -80,7 +80,9 @@ public class PromoFragment extends Fragment implements AdapterView.OnItemClickLi
             }
 
             code = promoArrayAdapter.getItem(position);
-            validatePromo(v, position);
+            Snackbar s = validatePromo(v, position);
+            if(s != null)
+                s.show();
         }
         else {
             if(noOfItems == 0) {
@@ -97,33 +99,41 @@ public class PromoFragment extends Fragment implements AdapterView.OnItemClickLi
                         .setAction("Yes", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                validatePromo(v, position);
+                                Snackbar s = validatePromo(v, position);
+                                if(s != null)
+                                    s.show();
                             }
                         }).show();
             }
         }
     }
 
-    public void validatePromo(View v) {
-        validatePromo(v, CODE_APPLIED);
+    public Snackbar validatePromo(View v) {
+        return validatePromo(v, CODE_APPLIED);
     }
 
-    private void validatePromo(View v, int position) {
+    private Snackbar validatePromo(View v, int position) {
         if(position != -1) {
             final String codeName = promoArrayAdapter.getPromo_desc()[position];
 
             if (position == 0) {
                 cartTotal = cartTotal * 0.9;
                 CODE_APPLIED = position;
-                Snackbar.make(v, "Code " + codeName + " applied", Snackbar.LENGTH_SHORT).show();
+                return Snackbar.make(v, "Code " + codeName + " applied", Snackbar.LENGTH_SHORT);
             } else if (position == 1) {
                 if (noOfItems >= 5) {
                     cartTotal = cartTotal * 0.8;
                     CODE_APPLIED = position;
-                    Snackbar.make(v, "Code " + codeName + " applied", Snackbar.LENGTH_SHORT).show();
+                    return Snackbar.make(v, "Code " + codeName + " applied", Snackbar.LENGTH_SHORT);
                 } else
-                    Snackbar.make(v, "Cart does not have 5 items", Snackbar.LENGTH_LONG).show();
+                    return Snackbar.make(v, "Cart does not have 5 items", Snackbar.LENGTH_LONG);
             }
+            else {
+                return null;
+            }
+        }
+        else {
+            return null;
         }
     }
 
@@ -188,5 +198,9 @@ public class PromoFragment extends Fragment implements AdapterView.OnItemClickLi
                 v.setTag(this);
             }
         }
+    }
+
+    public int getCodeApplied() {
+        return CODE_APPLIED + 1;
     }
 }
