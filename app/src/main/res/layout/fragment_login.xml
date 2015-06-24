@@ -4,28 +4,14 @@
     tools:context="getfresh.com.getfreshapplication.fragment.LoginFragment">
 
 
-    <TextView
+    <ImageSwitcher
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Enter Full name"
-        android:id="@+id/label_name"
+        android:layout_height="match_parent"
+        android:id="@+id/login_switcher"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName|textAutoCorrect"
-        android:ems="10"
-        android:id="@+id/edit_name"
-        android:layout_below="@+id/label_name"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:hint="Name" />
+        android:layout_above="@+id/label_phone" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -33,10 +19,10 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Enter Phone No (Home/Mobile)"
         android:id="@+id/label_phone"
-        android:layout_below="@+id/edit_name"
+        android:layout_above="@+id/edit_phone"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="42dp" />
+        android:layout_marginLeft="8dp" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -44,36 +30,12 @@
         android:inputType="phone|textAutoCorrect"
         android:ems="10"
         android:id="@+id/edit_phone"
-        android:layout_below="@+id/label_phone"
+        android:hint="1234567890"
+        android:layout_above="@+id/login_button"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:hint="1234567890" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Enter Home Address"
-        android:id="@+id/label_address"
-        android:layout_below="@+id/edit_phone"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="42dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:id="@+id/edit_address"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:inputType="textAutoCorrect|textMultiLine"
-        android:layout_below="@+id/label_address"
-        android:hint="Flat 100, Building " />
+        android:layout_marginBottom="116dp"
+        android:layout_marginLeft="8dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -84,4 +46,18 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberPassword"
+        android:ems="10"
+        android:id="@+id/edit_password"
+        android:layout_above="@+id/login_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="46dp"
+        android:visibility="visible"
+        android:hint="Password"
+        android:password="false" />
+
 </RelativeLayout>

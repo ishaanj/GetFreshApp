@@ -15,6 +15,9 @@
     <string name="pref_key_username">KEY_USERNAME</string>
     <string name="pref_key_phone" >KEY_PHONE</string>
     <string name="pref_key_address">KEY_ADDRESS</string>
+    <string name="pref_key_alt_name">KEY_ALT_NAME</string>
+    <string name="pref_key_alt_address">KEY_ALT_ADDRESS</string>
+    <string name="pref_key_pass">KEY_PASS</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

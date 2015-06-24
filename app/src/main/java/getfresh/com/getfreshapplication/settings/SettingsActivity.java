@@ -39,6 +39,9 @@ public class SettingsActivity extends Activity {
         public static final String KEY_NAME = "KEY_USERNAME";
         public static final String KEY_PHONE = "KEY_PHONE";
         public static final String KEY_ADDRESS = "KEY_ADDRESS";
+        public static final String KEY_ALT_NAME = "KEY_ALT_NAME";
+        public static final String KEY_ALT_ADDRESS = "KEY_ALT_ADDRESS";
+        public static final String KEY_PASS = "KEY_PASS";
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +95,36 @@ public class SettingsActivity extends Activity {
                     Toast.makeText(getActivity(), "Address cannot be empty", Toast.LENGTH_SHORT).show();
                 }
 
+            }
+            else if(key.equals(KEY_ALT_NAME)) {
+                EditTextPreference p = (EditTextPreference) findPreference("KEY_ALT_NAME");
+                String address = p.getEditText().getText().toString();
+
+                if(TextUtils.isEmpty(address)) {
+                    Toast.makeText(getActivity(), "Name cannot be empty", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+            else if(key.equals(KEY_ALT_ADDRESS)) {
+                EditTextPreference p = (EditTextPreference) findPreference("KEY_ALT_ADDRESS");
+                String address = p.getEditText().getText().toString();
+
+                if(TextUtils.isEmpty(address)) {
+                    Toast.makeText(getActivity(), "Address cannot be empty", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+            else if(key.equals(KEY_PASS)) {
+                EditTextPreference p = (EditTextPreference) findPreference("KEY_PASS");
+                String pass = p.getEditText().getText().toString();
+
+                if(pass.length() != 4 || !TextUtils.isDigitsOnly(pass)) {
+                    sp.edit().putString(KEY_PASS, "").commit();
+                    Toast.makeText(getActivity(), "Passcode must be 4 digits", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getActivity(), "Passcode saved", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

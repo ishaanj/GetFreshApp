@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     private double cartTotal;
 
     private static final String TAG = "MainAcitivity";
+    public static final String KEY_LOGGED_IN = "KEY_LOGGED_IN";
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+    private SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +58,17 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         setContentView(R.layout.activity_main);
 
         cartList = new ArrayList<Cart>();
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         if(!sp.getBoolean(LoginActivity.KEY_LOGIN_VISITED, false)) {
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
+            finish();
+        }
+        else if(sp.getBoolean(LoginActivity.KEY_LOGIN_VISITED, false) && sp.getString(LoginActivity.KEY_PASS, "").length() == 4 && !sp.getBoolean(KEY_LOGGED_IN, false)) {
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+            finish();
         }
 
         toolbar = (Toolbar) findViewById(R.id.drawer_toolbar);
@@ -77,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
     }
+
+
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -266,6 +276,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         if(cartFragment != null) {
             cartFragment.destroyProgressDialog();
         }
+
         super.onPause();
     }
 
@@ -274,6 +285,11 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         if(cartFragment != null) {
             cartFragment.destroyProgressDialog();
         }
+
+        if(sp != null) {
+            sp.edit().putBoolean(KEY_LOGGED_IN, false).commit();
+        }
+
         super.onStop();
     }
 }

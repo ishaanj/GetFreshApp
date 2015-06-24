@@ -1,7 +1,9 @@
 package getfresh.com.getfreshapplication.fragment;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
@@ -10,10 +12,16 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageSwitcher;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import getfresh.com.getfreshapplication.LoginActivity;
+import getfresh.com.getfreshapplication.MainActivity;
 import getfresh.com.getfreshapplication.R;
 import getfresh.com.getfreshapplication.settings.SettingsActivity;
 
@@ -22,75 +30,193 @@ import getfresh.com.getfreshapplication.settings.SettingsActivity;
  */
 public class LoginFragment extends Fragment {
 
-    private EditText name, phone, address;
+    private static final String PASS = SettingsActivity.GetFreshPreferenceFragment.KEY_PASS;
+
+    private ImageSwitcher imgSwitcher;
+    private TextView labelPhone;
+    private EditText  phone, password;
     private Button submit;
 
-    private boolean nameIsEmpty, phoneIsEmpty, phoneHasAlphabets, addressIsEmpty;
+    private boolean phoneIsEmpty, phoneHasAlphabets, passIsNotEmpty, passIsCorrect;
+
+    private ImageSwitchTask task;
 
     public LoginFragment() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
-        name = (EditText) v.findViewById(R.id.edit_name);
+        labelPhone = (TextView) v.findViewById(R.id.label_phone);
         phone = (EditText) v.findViewById(R.id.edit_phone);
-        address = (EditText) v.findViewById(R.id.edit_address);
+        password = (EditText) v.findViewById(R.id.edit_password);
+
+        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        final String pass = sp.getString(PASS, "");
+
+        if(!TextUtils.isEmpty(pass)) {
+            passIsNotEmpty = true;
+            password.setVisibility(View.VISIBLE);
+            phone.setVisibility(View.INVISIBLE);
+            labelPhone.setVisibility(View.INVISIBLE);
+        }
+
+        imgSwitcher = (ImageSwitcher) v.findViewById(R.id.login_switcher);
+        imgSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                ImageView iv = new ImageView(getActivity());
+                iv.setScaleType(ImageView.ScaleType.FIT_XY);
+                iv.setLayoutParams(new ImageSwitcher.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                return iv;
+            }
+        });
+
+        imgSwitcher.setInAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_in_left));
+        imgSwitcher.setOutAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right));
+
+        task = new ImageSwitchTask(imgSwitcher);
+        task.execute();
 
         submit = (Button) v.findViewById(R.id.login_button);
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String nameText = name.getText().toString();
                 String phoneText = phone.getText().toString();
-                String addressText = address.getText().toString();
+                String passwordText = password.getText().toString();
 
-                if(TextUtils.isEmpty(nameText)) {
-                    Snackbar.make(submit, "Name cannot be empty", Snackbar.LENGTH_SHORT).show();
-                    nameIsEmpty = true;
+                if(!passIsNotEmpty) {
+                    if (TextUtils.isEmpty(phoneText)) {
+                        Snackbar.make(submit, "Phone Number cannot be empty", Snackbar.LENGTH_SHORT).show();
+                        phoneIsEmpty = true;
+                    } else {
+                        phoneIsEmpty = false;
+                    }
+
+                    if (!TextUtils.isDigitsOnly(phoneText) && !TextUtils.isEmpty(phoneText)) {
+                        Snackbar.make(submit, "Phone Number must have only digits", Snackbar.LENGTH_SHORT).show();
+                        phoneHasAlphabets = true;
+                    } else {
+                        phoneHasAlphabets = false;
+                    }
+                }
+
+                if(passIsNotEmpty) {
+                    if(!TextUtils.isEmpty(passwordText) && passwordText.length() == 4 && TextUtils.isDigitsOnly(passwordText)) {
+                        if(passwordText.equals(pass)) {
+                            passIsCorrect = true;
+                        }
+                        else {
+                            Snackbar.make(submit, "Password is incorrect", Snackbar.LENGTH_SHORT).show();
+                            passIsCorrect = false;
+                        }
+                    }
+                    else {
+                        Snackbar.make(submit, "Password must be 4 digits", Snackbar.LENGTH_SHORT).show();
+                        passIsCorrect = false;
+                    }
+                }
+
+                if(!passIsNotEmpty) {
+                    if (!phoneIsEmpty && !phoneHasAlphabets) {
+                        sp.edit().putBoolean(LoginActivity.KEY_LOGIN_VISITED, true).commit();
+                        sp.edit().putString(SettingsActivity.GetFreshPreferenceFragment.KEY_PHONE, phoneText)
+                                .apply();
+
+                        if(task != null)
+                            task.cancel(true);
+
+                        Intent i = new Intent(getActivity(), MainActivity.class);
+                        getActivity().startActivity(i);
+                        getActivity().finish();
+                    }
                 }
                 else {
-                    nameIsEmpty = false;
-                }
+                    if (!phoneIsEmpty && !phoneHasAlphabets && passIsCorrect) {
+                        sp.edit().putBoolean(LoginActivity.KEY_LOGIN_VISITED, true)
+                                .putBoolean(MainActivity.KEY_LOGGED_IN, true)
+                                .commit();
 
-                if(TextUtils.isEmpty(phoneText)) {
-                    Snackbar.make(submit, "Phone Number cannot be empty", Snackbar.LENGTH_SHORT).show();
-                    phoneIsEmpty = true;
-                }
-                else {
-                    phoneIsEmpty = false;
-                }
+                        if(task != null)
+                            task.cancel(true);
 
-                if(!TextUtils.isDigitsOnly(phoneText) && !TextUtils.isEmpty(phoneText)) {
-                    Snackbar.make(submit, "Phone Number must have only digits", Snackbar.LENGTH_SHORT).show();
-                    phoneHasAlphabets = true;
-                }
-                else {
-                    phoneHasAlphabets = false;
-                }
-
-                if(TextUtils.isEmpty(addressText)) {
-                    Snackbar.make(submit, "Address cannot be empty", Snackbar.LENGTH_SHORT).show();
-                    addressIsEmpty = true;
-                }
-                else {
-                    addressIsEmpty = false;
-                }
-
-                if(!nameIsEmpty &&  !phoneIsEmpty && !phoneHasAlphabets &&  !addressIsEmpty) {
-                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    sp.edit().putBoolean(LoginActivity.KEY_LOGIN_VISITED, true).commit();
-                    sp.edit().putString(SettingsActivity.GetFreshPreferenceFragment.KEY_NAME, nameText)
-                             .putString(SettingsActivity.GetFreshPreferenceFragment.KEY_PHONE, phoneText)
-                             .putString(SettingsActivity.GetFreshPreferenceFragment.KEY_ADDRESS, addressText)
-                             .apply();
-
-                    getActivity().finish();
+                        Intent i = new Intent(getActivity(), MainActivity.class);
+                        getActivity().startActivity(i);
+                        getActivity().finish();
+                    }
                 }
             }
         });
 
         return v;
+    }
+
+    private class ImageSwitchTask extends AsyncTask<Void, Integer, Void> {
+
+        private ImageSwitcher switcher;
+        private int[] imageIds = new int[] {
+                R.drawable.aaismasala,
+                R.drawable.chillycheese,
+                R.drawable.comint,
+                R.drawable.creamyajwain,
+                R.drawable.freshthai,
+                R.drawable.jaffna,
+                R.drawable.kasurimethi,
+                R.drawable.kolkatacalling,
+                R.drawable.kovalam,
+                R.drawable.madrasmagic,
+                R.drawable.nizamekhas,
+                R.drawable.peppybbq,
+                R.drawable.periperi,
+                R.drawable.rechado,
+                R.drawable.suriyani,
+                R.drawable.tikkatwist
+        };
+
+        private long timeToSwitch = 3000;
+
+        public ImageSwitchTask(ImageSwitcher switcher) {
+            this.switcher = switcher;
+        }
+
+        public ImageSwitchTask(ImageSwitcher switcher, long timeToSwitch) {
+            this.switcher = switcher;
+            this.timeToSwitch = timeToSwitch;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+
+            imgSwitcher.setImageResource(imageIds[values[0]]);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            int currentImgPosition = 0;
+            while(!isCancelled()) {
+                publishProgress(currentImgPosition);
+
+                try {
+                    currentImgPosition = (currentImgPosition + 1) % imageIds.length;
+                    Thread.sleep(timeToSwitch);
+                } catch (InterruptedException e) {
+
+                }
+            }
+
+            return null;
+        }
     }
 
 

@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import getfresh.com.getfreshapplication.fragment.LoginFragment;
+import getfresh.com.getfreshapplication.settings.SettingsActivity;
 
 /**
  * @author Somshubra
@@ -13,6 +14,7 @@ import getfresh.com.getfreshapplication.fragment.LoginFragment;
 public class LoginActivity extends AppCompatActivity {
 
     public static final String KEY_LOGIN_VISITED = "LOGIN_VISITED";
+    public static final String KEY_PASS = SettingsActivity.GetFreshPreferenceFragment.KEY_PASS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

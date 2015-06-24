@@ -3,6 +3,12 @@
         <EditTextPreference android:key="@string/pref_key_username" android:title="Name" />
         <EditTextPreference android:key="@string/pref_key_phone" android:title="Phone Number" />
         <EditTextPreference android:key="@string/pref_key_address" android:title="Home address" />
+        <EditTextPreference android:key="@string/pref_key_pass" android:title="Passcode" android:inputType="numberPassword" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:key="Alternate" android:title="Alternate">
+        <EditTextPreference android:key="@string/pref_key_alt_name" android:title="Alternate Name" />
+        <EditTextPreference android:key="@string/pref_key_address" android:title="Alternate Address" />
     </PreferenceCategory>
 
 

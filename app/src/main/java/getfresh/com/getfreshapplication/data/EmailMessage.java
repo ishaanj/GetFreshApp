@@ -54,6 +54,9 @@ public class EmailMessage {
         private String lat, lon;
         private String isDiscounted;
         private String discountCode;
+        private String date;
+        private String time;
+        private boolean isDateTimeDifferent;
 
         public Builder(Address location) {
             this.location = location;
@@ -73,6 +76,11 @@ public class EmailMessage {
 
             if(!TextUtils.isEmpty(phoneNumber)) {
                 sb.append("Phone No. : " + phoneNumber + "\n");
+            }
+
+            if(isDateTimeDifferent) {
+                sb.append("Deliver on Date : " + date + "\n");
+                sb.append("Deliver at Time : " + time + "\n");
             }
 
             if(!TextUtils.isEmpty(lat) || !TextUtils.isEmpty(lon)) {
@@ -192,6 +200,19 @@ public class EmailMessage {
 
         public Builder setDiscountCode(String discountCode) {
             this.discountCode = discountCode;
+            return this;
+        }
+
+        public Builder setDate(String date) {
+            this.date = date;
+            isDateTimeDifferent = true;
+            return this;
+        }
+
+        public Builder setTime(String time) {
+            this.time = time;
+            if(!time.equalsIgnoreCase("Now"))
+                isDateTimeDifferent = true;
             return this;
         }
     }
