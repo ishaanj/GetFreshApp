@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
@@ -71,8 +72,12 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        imgSwitcher.setInAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_in_left));
-        imgSwitcher.setOutAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right));
+        Animation fadein = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
+        fadein.setDuration(1000);
+        imgSwitcher.setInAnimation(fadein);
+        Animation fadeout = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
+        fadeout.setDuration(1000);
+        imgSwitcher.setOutAnimation(fadeout);
 
         task = new ImageSwitchTask(imgSwitcher);
         task.execute();
@@ -155,25 +160,25 @@ public class LoginFragment extends Fragment {
 
         private ImageSwitcher switcher;
         private int[] imageIds = new int[] {
-                R.drawable.aaismasala,
-                R.drawable.chillycheese,
-                R.drawable.comint,
-                R.drawable.creamyajwain,
-                R.drawable.freshthai,
-                R.drawable.jaffna,
-                R.drawable.kasurimethi,
-                R.drawable.kolkatacalling,
-                R.drawable.kovalam,
-                R.drawable.madrasmagic,
-                R.drawable.nizamekhas,
-                R.drawable.peppybbq,
-                R.drawable.periperi,
-                R.drawable.rechado,
-                R.drawable.suriyani,
-                R.drawable.tikkatwist
+                R.drawable.aaismasala_big,
+                R.drawable.chillycheese_big,
+                R.drawable.comint_big,
+                R.drawable.creamyajwain_big,
+                R.drawable.freshthai_big,
+                R.drawable.jaffana_big,
+                R.drawable.kasurimethi_big,
+                R.drawable.kolkatacalling_big,
+                R.drawable.kovalam_big,
+                R.drawable.madrasmagic_big,
+                R.drawable.nizamekhas_big,
+                R.drawable.peppybbq_big,
+                R.drawable.periperi_big,
+                R.drawable.rechado_big,
+                R.drawable.suriyani_big,
+                R.drawable.tikkatwist_big
         };
 
-        private long timeToSwitch = 3000;
+        private long timeToSwitch = 5000;
 
         public ImageSwitchTask(ImageSwitcher switcher) {
             this.switcher = switcher;

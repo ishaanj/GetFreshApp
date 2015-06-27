@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="item_titles">
-        <item>Suriyani</item>
-        <item>Rechado</item>
-        <item>Kovalam</item>
-        <item>Tikka Twist</item>
-        <item>Peri Peri</item>
-        <item>Kasuri Methi</item>
-        <item>Nizam-e-Khas</item>
-        <item>Creamy Ajwain</item>
-        <item>Peppy BBQ</item>
         <item>Aai\'s Masala</item>
-        <item>Jaffna</item>
-        <item>Madras Magic</item>
-        <item>Kolkata Calling</item>
-        <item>Comint</item>
-        <item>Fresh Thai</item>
         <item>Chilli Cheese</item>
-
-
+        <item>Comint</item>
+        <item>Creamy Ajwain</item>
+        <item>Fresh Thai</item>
+        <item>Jaffna</item>
+        <item>Kasuri Methi</item>
+        <item>Kolkata Calling</item>
+        <item>Kovalam</item>
+        <item>Madras Magic</item>
+        <item>Nizam-e-Khas</item>
+        <item>Peppy BBQ</item>
+        <item>Peri Peri</item>
+        <item>Rechado</item>
+        <item>Suriyani</item>
+        <item>Tikka Twist</item>
     </string-array>
 
     <string-array name="item_subtitles">
@@ -61,13 +59,8 @@
 
     <string-array name="item_prices">
         <item>140.00</item>
-        <item>140.00</item>
-        <item>140.00</item>
-        <item>140.00</item>
-        <item>140.00</item>
-        <item>140.00</item>
-        <item>140.00</item>
         <item>150.00</item>
+        <item>140.00</item>
         <item>150.00</item>
         <item>140.00</item>
         <item>140.00</item>
@@ -75,8 +68,12 @@
         <item>140.00</item>
         <item>140.00</item>
         <item>140.00</item>
+        <item>140.00</item>
+        <item>140.00</item>
         <item>150.00</item>
-
+        <item>140.00</item>
+        <item>140.00</item>
+        <item>140.00</item>
     </string-array>
 
     <string-array name="item_flavours1">
