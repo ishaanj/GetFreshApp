@@ -417,7 +417,7 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                 .setPostalCode()
                 .setLocality()
                 .setSubLocality()
-                .setIsDiscounted(isDiscounted?"true" : "false")
+                .setIsDiscounted(isDiscounted? "true" : "false")
                 .setDiscountCode(discountCode + "");
 
 
