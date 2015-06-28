@@ -131,7 +131,7 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
 
                 requestAddress.setSingleChoiceItems(array, 0, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(final DialogInterface dialog, int which) {
                         if(which == 0) {
                             if(!TextUtils.isEmpty(haddress)) {
                                 addressResultType = 1;
@@ -150,13 +150,14 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
 
                                 addressBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
                                     @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                                    public void onClick(DialogInterface dialog2, int which) {
                                         String name = editName.getText().toString();
                                         String address = editAddress.getText().toString();
                                         SharedPreferences.Editor edit = sp.edit();
 
                                         if(TextUtils.isEmpty(name)) {
                                             Toast.makeText(getActivity(), "Name cannot be empty", Toast.LENGTH_SHORT).show();
+                                            return;
                                         }
                                         else {
                                             edit.putString(NAME, name);
@@ -164,6 +165,7 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
 
                                         if(TextUtils.isDigitsOnly(address)) {
                                             Toast.makeText(getActivity(), "Address cannot be empty", Toast.LENGTH_SHORT).show();
+                                            return;
                                         }
                                         else {
                                             edit.putString(ADDRESS, address);
@@ -173,6 +175,7 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                                         addressResultType = 1;
 
                                         createDateTimeDialog().show();
+                                        dialog2.dismiss();
                                         dialog.dismiss();
                                     }
                                 });

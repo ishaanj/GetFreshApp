@@ -60,6 +60,12 @@ public class LoginFragment extends Fragment {
             phone.setVisibility(View.INVISIBLE);
             labelPhone.setVisibility(View.INVISIBLE);
         }
+        else {
+            passIsNotEmpty = false;
+            password.setVisibility(View.GONE);
+            phone.setVisibility(View.VISIBLE);
+            labelPhone.setVisibility(View.VISIBLE);
+        }
 
         imgSwitcher = (ImageSwitcher) v.findViewById(R.id.login_switcher);
         imgSwitcher.setFactory(new ViewSwitcher.ViewFactory() {

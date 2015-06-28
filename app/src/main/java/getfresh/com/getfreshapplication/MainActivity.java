@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -64,11 +65,13 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
             finish();
+            return;
         }
         else if(sp.getBoolean(LoginActivity.KEY_LOGIN_VISITED, false) && sp.getString(LoginActivity.KEY_PASS, "").length() == 4 && !sp.getBoolean(KEY_LOGGED_IN, false)) {
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
             finish();
+            return;
         }
 
         toolbar = (Toolbar) findViewById(R.id.drawer_toolbar);
@@ -169,7 +172,11 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         super.onStart();
 
         String name = PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.GetFreshPreferenceFragment.KEY_NAME, "");
-        Snackbar.make(toolbar, "Welcome back, " + name, Snackbar.LENGTH_SHORT).show();
+        if(!TextUtils.isEmpty(name))
+            Snackbar.make(toolbar, "Welcome back, " + name, Snackbar.LENGTH_SHORT).show();
+        else {
+            Snackbar.make(toolbar, "Welcome", Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     public void onSectionAttached(int number) {
