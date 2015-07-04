@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -21,6 +23,8 @@ public class SettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         getFragmentManager().beginTransaction().replace(R.id.settings_frame, new GetFreshPreferenceFragment()).commit();
+
+
     }
 
 
@@ -42,6 +46,7 @@ public class SettingsActivity extends Activity {
         public static final String KEY_ALT_NAME = "KEY_ALT_NAME";
         public static final String KEY_ALT_ADDRESS = "KEY_ALT_ADDRESS";
         public static final String KEY_PASS = "KEY_PASS";
+        public static final String KEY_INSTRUCTIONS_MAIN = "KEY_INST_MAIN";
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,17 @@ public class SettingsActivity extends Activity {
             setRetainInstance(true);
 
             addPreferencesFromResource(R.xml.pref_general);
+
+            Preference inst = findPreference(KEY_INSTRUCTIONS_MAIN);
+            inst.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    sp.edit().putBoolean(KEY_INSTRUCTIONS_MAIN, false).apply();
+                    Toast.makeText(getActivity(), "Tutorial Reset", Toast.LENGTH_LONG).show();
+                    return true;
+                }
+            });
         }
 
         @Override

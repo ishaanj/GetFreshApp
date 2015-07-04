@@ -162,26 +162,29 @@ public class LoginFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        if(task != null)
+            task.cancel(true);
+        getActivity().finish();
+        super.onPause();
+    }
+
     private class ImageSwitchTask extends AsyncTask<Void, Integer, Void> {
 
         private ImageSwitcher switcher;
         private int[] imageIds = new int[] {
-                R.drawable.aaismasala_big,
-                R.drawable.chillycheese_big,
-                R.drawable.comint_big,
-                R.drawable.creamyajwain_big,
-                R.drawable.freshthai_big,
-                R.drawable.jaffana_big,
-                R.drawable.kasurimethi_big,
-                R.drawable.kolkatacalling_big,
-                R.drawable.kovalam_big,
-                R.drawable.madrasmagic_big,
-                R.drawable.nizamekhas_big,
-                R.drawable.peppybbq_big,
-                R.drawable.periperi_big,
-                R.drawable.rechado_big,
-                R.drawable.suriyani_big,
-                R.drawable.tikkatwist_big
+                R.drawable.sw1,
+                R.drawable.sw2,
+                R.drawable.sw3,
+                R.drawable.sw4,
+                R.drawable.sw5,
+                R.drawable.sw6
         };
 
         private long timeToSwitch = 5000;

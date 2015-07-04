@@ -2,11 +2,13 @@ package getfresh.com.getfreshapplication.fragment;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -26,12 +28,14 @@ import java.util.ArrayList;
 
 import getfresh.com.getfreshapplication.R;
 import getfresh.com.getfreshapplication.data.Cart;
+import getfresh.com.getfreshapplication.settings.SettingsActivity;
 
 /**
  * @author Somshubra
  */
 public class MainActivityFragment extends Fragment implements AdapterView.OnItemClickListener,AdapterView.OnItemLongClickListener {
     public static final String TAG = "MainActivityFragment";
+    public static final String KEY_INST_MAIN = SettingsActivity.GetFreshPreferenceFragment.KEY_INSTRUCTIONS_MAIN;
     private ListView lv;
     private boolean isLand;
     private ItemAdapter adapter;
@@ -70,18 +74,31 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         adapter = new ItemAdapter();
 
-        final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-        alert.setTitle("Instructions");
-        final TextView input = new TextView(getActivity());
-        input.setText("Click on item to add it to your cart \nClick and hold down on an item to know more about it");
-        input.setLeft(15);
-        alert.setView(input);
-        alert.setNegativeButton("Got It", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                dialog.dismiss();
-            }
-        });
-        alert.show();
+        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean isFirst = sp.getBoolean(KEY_INST_MAIN, false);
+
+        if(!isFirst) {
+            final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+            alert.setTitle("Instructions");
+            final TextView input = new TextView(getActivity());
+            input.setText("Click on item to add it to your cart \nClick and hold down on an item to know more about it");
+            input.setLeft(15);
+            alert.setView(input);
+            alert.setNegativeButton("Remind Later", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            alert.setPositiveButton("Got It", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    sp.edit().putBoolean(KEY_INST_MAIN, true).apply();
+                    dialog.dismiss();
+                }
+            });
+            alert.show();
+        }
+
 
         lv = (ListView) v.findViewById(R.id.main_list);
         lv.setAdapter(adapter);

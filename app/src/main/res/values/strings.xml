@@ -18,10 +18,12 @@
     <string name="pref_key_alt_name">KEY_ALT_NAME</string>
     <string name="pref_key_alt_address">KEY_ALT_ADDRESS</string>
     <string name="pref_key_pass">KEY_PASS</string>
+    <string name="pref_key_inst_main">KEY_INST_MAIN</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_login">LoginActivity</string>
+
 
     <string name="hello_world">Hello world!</string>
 

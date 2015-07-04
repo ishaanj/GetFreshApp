@@ -11,7 +11,9 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/label_phone" />
+        android:layout_above="@+id/label_phone"
+        android:measureAllChildren="false"
+        android:minWidth="0dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -31,11 +33,9 @@
         android:ems="10"
         android:id="@+id/edit_phone"
         android:hint="1234567890"
-        android:layout_above="@+id/login_button"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="116dp"
-        android:layout_marginLeft="8dp" />
+        android:layout_above="@+id/edit_password"
+        android:layout_alignLeft="@+id/label_phone"
+        android:layout_alignStart="@+id/label_phone" />
 
     <Button
         android:layout_width="wrap_content"
@@ -53,11 +53,10 @@
         android:inputType="numberPassword"
         android:ems="10"
         android:id="@+id/edit_password"
-        android:layout_above="@+id/login_button"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="46dp"
         android:visibility="visible"
         android:hint="Password"
-        android:password="false" />
+        android:password="false"
+        android:layout_above="@+id/login_button"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
