@@ -20,6 +20,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ import getfresh.com.getfreshapplication.data.Cart;
 /**
  * @author Somshubra
  */
-public class MainActivityFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class MainActivityFragment extends Fragment implements AdapterView.OnItemClickListener,AdapterView.OnItemLongClickListener {
     public static final String TAG = "MainActivityFragment";
     private ListView lv;
     private boolean isLand;
@@ -69,11 +70,24 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         adapter = new ItemAdapter();
 
+        final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle("Instructions");
+        final TextView input = new TextView(getActivity());
+        input.setText("Click on item to add it to your cart \nClick and hold down on an item to know more about it");
+        input.setLeft(15);
+        alert.setView(input);
+        alert.setNegativeButton("Got It", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.dismiss();
+            }
+        });
+        alert.show();
+
         lv = (ListView) v.findViewById(R.id.main_list);
         lv.setAdapter(adapter);
 
         lv.setOnItemClickListener(this);
-
+        lv.setOnItemLongClickListener(this);
         return v;
     }
 
@@ -109,6 +123,76 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+        final Cart temp = adapter.getItem(position);
+
+        final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle("Please enter how many you would like");
+
+        final EditText input = new EditText(getActivity());
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setRawInputType(Configuration.KEYBOARD_12KEY);
+        input.setHint("1, 2, 3...");
+        alert.setView(input);
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                int count = Integer.parseInt(input.getText().toString());
+                if (count >= 0) {
+                    temp.setItemQuantity(count);
+                    adapter.updateCard(position, temp);
+
+                    if (cartList.contains(temp)) {
+                        cartList.remove(temp);
+                    }
+
+                    cartList.add(temp);
+
+                    if (listener != null) {
+                        listener.onNewCartItemAddedListener(adapter.getItem(position));
+                    }
+                } else {
+                    Snackbar.make(input, "Only Positive numbers!", Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.dismiss();
+            }
+        });
+        alert.show();
+    }
+
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth,int reqHeight){
+        //Raw height and width of the Image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height>reqHeight || width>reqWidth) {
+            final int heightratio = Math.round((float)height / (float)reqHeight);
+            final int widthRatio = Math.round((float)width / (float)reqWidth);
+
+            inSampleSize = heightratio < widthRatio ? heightratio : widthRatio;
+        }
+        return inSampleSize;
+    }
+    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,int reqWidth,int reqHeight){
+        //first decode with inJustdecodeBounds = true to check dimensions.
+
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, resId, options);
+        //Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        //Decode bitmap with inSampleSize
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
             @Override
@@ -178,35 +262,7 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
             }
         });
         dialog.show();
-    }
-
-    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth,int reqHeight){
-        //Raw height and width of the Image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height>reqHeight || width>reqWidth) {
-            final int heightratio = Math.round((float)height / (float)reqHeight);
-            final int widthRatio = Math.round((float)width / (float)reqWidth);
-
-            inSampleSize = heightratio < widthRatio ? heightratio : widthRatio;
-        }
-        return inSampleSize;
-    }
-    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,int reqWidth,int reqHeight){
-        //first decode with inJustdecodeBounds = true to check dimensions.
-
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(res, resId, options);
-        //Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-        //Decode bitmap with inSampleSize
-        options.inJustDecodeBounds = false;
-
-        return BitmapFactory.decodeResource(res, resId, options);
+        return true;
     }
 
     private class ItemAdapter extends BaseAdapter {

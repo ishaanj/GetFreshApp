@@ -208,7 +208,6 @@ public class LoginFragment extends Fragment {
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-
             imgSwitcher.setImageResource(imageIds[values[0]]);
         }
 

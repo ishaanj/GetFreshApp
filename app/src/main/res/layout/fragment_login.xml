@@ -6,7 +6,7 @@
 
     <ImageSwitcher
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="500dp"
         android:id="@+id/login_switcher"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
