@@ -17,6 +17,6 @@
         android:elevation="8dp"
         android:background="#B0BEC5"
         android:divider="#FFFFFF"
-        android:dividerHeight="4dp" />
+        android:dividerHeight="10dp" />
 
 </RelativeLayout>
