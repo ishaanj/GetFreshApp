@@ -4,10 +4,10 @@
         <Preference android:key="@string/pref_key_inst_main" android:title="Reset Tutorial" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:key="Home" android:title="General">
+    <PreferenceCategory android:key="Home" android:title="Home">
         <EditTextPreference android:key="@string/pref_key_username" android:title="Name" />
-        <EditTextPreference android:key="@string/pref_key_phone" android:title="Phone Number" />
         <EditTextPreference android:key="@string/pref_key_address" android:title="Home address" />
+        <EditTextPreference android:key="@string/pref_key_phone" android:title="Phone Number" />
     </PreferenceCategory>
 
     <PreferenceCategory android:key="Alternate" android:title="Alternate">

@@ -22,7 +22,6 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -80,10 +79,7 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
         if(!isFirst) {
             final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
             alert.setTitle("Instructions");
-            final TextView input = new TextView(getActivity());
-            input.setText("Click on item to add it to your cart \nClick and hold down on an item to know more about it");
-            input.setLeft(15);
-            alert.setView(input);
+            alert.setMessage("Click on item to add it to your cart \nClick and hold down on an item to know more about it");
             alert.setNegativeButton("Remind Later", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
