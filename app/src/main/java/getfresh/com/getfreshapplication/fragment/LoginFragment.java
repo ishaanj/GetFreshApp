@@ -184,7 +184,8 @@ public class LoginFragment extends Fragment {
                 R.drawable.sw3,
                 R.drawable.sw4,
                 R.drawable.sw5,
-                R.drawable.sw6
+                R.drawable.sw6,
+                R.drawable.sw7
         };
 
         private long timeToSwitch = 5000;

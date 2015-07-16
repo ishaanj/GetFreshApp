@@ -2,24 +2,10 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold"
-        android:text="Large Text"
-        android:id="@+id/promo_item_title"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textSize="20sp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:id="@+id/promo_item_desc"
-        android:textSize="16sp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/promo_item_title"/>
+        android:id="@+id/promo_imageView"
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>

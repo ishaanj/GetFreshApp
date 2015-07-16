@@ -9,19 +9,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 
 import java.util.ArrayList;
 
@@ -32,9 +30,10 @@ import getfresh.com.getfreshapplication.settings.SettingsActivity;
 /**
  * @author Somshubra
  */
-public class MainActivityFragment extends Fragment implements AdapterView.OnItemClickListener,AdapterView.OnItemLongClickListener {
+public class MainActivityFragment extends Fragment implements AdapterView.OnItemClickListener{
     public static final String TAG = "MainActivityFragment";
     public static final String KEY_INST_MAIN = SettingsActivity.GetFreshPreferenceFragment.KEY_INSTRUCTIONS_MAIN;
+    private static int QUANTITY_MAX = 10 , QUANTITY_MIN = 1;
     private ListView lv;
     private boolean isLand;
     private ItemAdapter adapter;
@@ -100,7 +99,6 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
         lv.setAdapter(adapter);
 
         lv.setOnItemClickListener(this);
-        lv.setOnItemLongClickListener(this);
         return v;
     }
 
@@ -138,41 +136,56 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
         final Cart temp = adapter.getItem(position);
 
-        final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-        alert.setTitle("Please enter how many you would like");
+        LayoutInflater inflater = adapter.getInflater();
+        if(inflater == null) {
+            inflater = LayoutInflater.from(getActivity());
+        }
+        View v = inflater.inflate(R.layout.dialog_item_details, null, false);
+        final ImageView im = (ImageView) v.findViewById(R.id.dialog_item_img);
+        final NumberPicker nm = (NumberPicker) v.findViewById(R.id.numberPicker);
 
-        final EditText input = new EditText(getActivity());
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        input.setRawInputType(Configuration.KEYBOARD_12KEY);
-        input.setHint("1, 2, 3...");
-        alert.setView(input);
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                int count = Integer.parseInt(input.getText().toString());
-                if (count >= 0) {
-                    temp.setItemQuantity(count);
-                    adapter.updateCard(position, temp);
+        nm.setMaxValue(QUANTITY_MAX);
+        nm.setMinValue(QUANTITY_MIN);
+        nm.setWrapSelectorWheel(false);
 
-                    if (cartList.contains(temp)) {
-                        cartList.remove(temp);
-                    }
-
-                    cartList.add(temp);
-
-                    if (listener != null) {
-                        listener.onNewCartItemAddedListener(adapter.getItem(position));
-                    }
-                } else {
-                    Snackbar.make(input, "Only Positive numbers!", Snackbar.LENGTH_LONG).show();
-                }
-            }
-        });
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
+        }).setPositiveButton("Add to cart", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                int count = nm.getValue();
+                temp.setItemQuantity(count);
+                adapter.updateCard(position, temp);
+
+                if (cartList.contains(temp)) {
+                    cartList.remove(temp);
+                }
+
+                cartList.add(temp);
+
+                if (listener != null) {
+                                listener.onNewCartItemAddedListener(adapter.getItem(position));
+                }
+
+
+            }
         });
-        alert.show();
+        AlertDialog dialog = builder.create();
+
+        dialog.setView(v, 0, 0, 0, 0);
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Bitmap b = decodeSampledBitmapFromResource(getActivity().getResources(), imageIdBig[position], im.getWidth(), im.getHeight());
+                im.setImageBitmap(b);
+            }
+        });
+        dialog.show();
     }
 
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth,int reqHeight){
@@ -202,80 +215,6 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
         options.inJustDecodeBounds = false;
 
         return BitmapFactory.decodeResource(res, resId, options);
-    }
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        }).setPositiveButton("Add to cart", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                final Cart temp = adapter.getItem(position);
-
-                final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                alert.setTitle("Please enter how many you would like");
-
-                final EditText input = new EditText(getActivity());
-                input.setInputType(InputType.TYPE_CLASS_NUMBER);
-                input.setRawInputType(Configuration.KEYBOARD_12KEY);
-                input.setHint("1, 2, 3...");
-                alert.setView(input);
-                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        int count = Integer.parseInt(input.getText().toString());
-                        if (count >= 0) {
-                            temp.setItemQuantity(count);
-                            adapter.updateCard(position, temp);
-
-                            if (cartList.contains(temp)) {
-                                cartList.remove(temp);
-                            }
-
-                            cartList.add(temp);
-
-                            if (listener != null) {
-                                listener.onNewCartItemAddedListener(adapter.getItem(position));
-                            }
-                        } else {
-                            Snackbar.make(input, "Only Positive numbers!", Snackbar.LENGTH_LONG).show();
-                        }
-                    }
-                });
-                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.dismiss();
-                    }
-                });
-                alert.show();
-
-                dialog.dismiss();
-            }
-        });
-        AlertDialog dialog = builder.create();
-
-        LayoutInflater inflater = adapter.getInflater();
-        if(inflater == null) {
-            inflater = LayoutInflater.from(getActivity());
-        }
-        View v = inflater.inflate(R.layout.dialog_item_details, null, false);
-        final ImageView im = (ImageView) v.findViewById(R.id.dialog_item_img);
-
-        dialog.setView(v, 0, 0, 0, 0);
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                Bitmap b = decodeSampledBitmapFromResource(getActivity().getResources(), imageIdBig[position], im.getWidth(), im.getHeight());
-                im.setImageBitmap(b);
-            }
-        });
-        dialog.show();
-        return true;
     }
 
     private class ItemAdapter extends BaseAdapter {

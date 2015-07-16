@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -106,6 +106,7 @@ public class PromoFragment extends Fragment implements AdapterView.OnItemClickLi
                         }).show();
             }
         }
+
     }
 
     public Snackbar validatePromo(View v) {
@@ -113,36 +114,46 @@ public class PromoFragment extends Fragment implements AdapterView.OnItemClickLi
     }
 
     private Snackbar validatePromo(View v, int position) {
-        if(position != -1) {
+        if (position != -1) {
             final String codeName = promoArrayAdapter.getPromo_desc()[position];
 
             if (position == 0) {
-                cartTotal = cartTotal * 0.9;
-                CODE_APPLIED = position;
-                return Snackbar.make(v, "Code " + codeName + " applied", Snackbar.LENGTH_SHORT);
+                if (noOfItems >= 7) {
+                    cartTotal = cartTotal - 280;
+                    CODE_APPLIED = position;
+                    return Snackbar.make(v, "Code " + codeName + " applied", Snackbar.LENGTH_SHORT);
+                } else if (noOfItems == 6)
+                    return Snackbar.make(v, "Add 1 more item to cart", Snackbar.LENGTH_SHORT);
+                else if (noOfItems == 5)
+                    return Snackbar.make(v, "Add 2 more items to your cart", Snackbar.LENGTH_SHORT);
+                else if (noOfItems < 5)
+                    return Snackbar.make(v, "Cart does not have 5 items", Snackbar.LENGTH_LONG);
+
             } else if (position == 1) {
-                if (noOfItems >= 5) {
-                    cartTotal = cartTotal * 0.8;
+                if (noOfItems >= 3) {
+                    cartTotal = cartTotal * 0.75;
                     CODE_APPLIED = position;
                     return Snackbar.make(v, "Code " + codeName + " applied", Snackbar.LENGTH_SHORT);
                 } else
-                    return Snackbar.make(v, "Cart does not have 5 items", Snackbar.LENGTH_LONG);
-            }
-            else {
+                    return Snackbar.make(v, "Cart does not have 3 items", Snackbar.LENGTH_LONG);
+            } else {
                 return null;
             }
-        }
-        else {
+        } else {
             return null;
         }
+        return null;
     }
 
 
     private class PromoArrayAdapter extends BaseAdapter {
 
         private LayoutInflater inflater;
-        private String[] promo_desc;
-        private String[] promo_title;
+        String[] promo_desc,promo_title;
+        int promoImageIds[] = new int[]{
+                R.drawable.promo1,
+                R.drawable.promo2
+        };
 
         public PromoArrayAdapter(Context context) {
             inflater = LayoutInflater.from(context);
@@ -182,18 +193,16 @@ public class PromoFragment extends Fragment implements AdapterView.OnItemClickLi
                 vh = (ViewHolder) v.getTag();
             }
 
-            vh.title.setText(promo_title[position]);
-            vh.desc.setText(promo_desc[position]);
+            vh.iw.setImageResource(promoImageIds[position]);
 
             return v;
         }
 
         private class ViewHolder {
-            TextView title, desc;
+            ImageView iw;
 
             public ViewHolder(View v) {
-                title = (TextView) v.findViewById(R.id.promo_item_title);
-                desc = (TextView) v.findViewById(R.id.promo_item_desc);
+                iw = (ImageView) v.findViewById(R.id.promo_imageView);
 
                 v.setTag(this);
             }
@@ -203,4 +212,7 @@ public class PromoFragment extends Fragment implements AdapterView.OnItemClickLi
     public int getCodeApplied() {
         return CODE_APPLIED + 1;
     }
+
+
 }
+

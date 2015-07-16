@@ -120,12 +120,12 @@
 
 
     <string-array name="promo_code">
-        <item>FF22</item>
-        <item>C1B1</item>
+        <item>APGFI05</item>
+        <item>MMGFI25</item>
     </string-array>
 
     <string-array name="promo_desc">
-        <item>Get flat 10% off on total cart</item>
-        <item>Get 20% off on total cart if number of items is greater than 5</item>
+        <item>Buy 5 packets and get 2 packets free!!!</item>
+        <item>Buy 3 packets or more and get 25% off</item>
     </string-array>
 </resources>

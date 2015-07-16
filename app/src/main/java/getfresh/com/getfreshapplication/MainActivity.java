@@ -224,6 +224,41 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        switch(id){
+            case R.id.cart_button_action :
+                getCartList();
+
+                cartTotal = 0;
+                cartFragment = (cartFragment == null) ? new CartFragment() : cartFragment;
+
+                for (Cart c : cartList)
+                    if (c != null)
+                        cartTotal += (double) c.getItemQuantity() * (Double.parseDouble(c.getItemPrice()));
+
+                if(promoFragment != null) {
+                    promoFragment.setCartArrayList(cartList, cartTotal);
+                    promoFragment.validatePromo(toolbar);
+
+                    cartTotal = promoFragment.getCartTotal();
+                    cartFragment.setIsDiscounted(true);
+
+                    int pCode = promoFragment.getCodeApplied();
+                    cartFragment.setDiscountCode(pCode);
+                }
+
+                cartFragment.setcList(cartList);
+                cartFragment.setTotalResult(cartTotal);
+
+                try {
+                    getSupportFragmentManager().popBackStackImmediate();
+                } catch (Exception e) {}
+                getSupportFragmentManager().beginTransaction()
+                        .addToBackStack(null)
+                        .replace(R.id.container, cartFragment)
+                        .commit();
+
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
