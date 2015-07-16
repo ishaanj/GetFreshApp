@@ -43,7 +43,11 @@ public class SettingsActivity extends Activity {
         public static final String KEY_NAME = "KEY_USERNAME";
         public static final String KEY_PHONE = "KEY_PHONE";
         public static final String KEY_ADDRESS = "KEY_ADDRESS";
+        public static final String KEY_ADDRESS_STREET = "KEY_ADDRESS_STREET";
+        public static final String KEY_ADDRESS_BUILDING = "KEY_ADDRESS_BUILDING";
         public static final String KEY_ALT_NAME = "KEY_ALT_NAME";
+        public static final String KEY_ALT_ADDRESS_STREET = "KEY_ALT_ADDRESS_STREET";
+        public static final String KEY_ALT_ADDRESS_BUILDING = "KEY_ALT_ADDRESS_BUILDING";
         public static final String KEY_ALT_ADDRESS = "KEY_ALT_ADDRESS";
         public static final String KEY_PASS = "KEY_PASS";
         public static final String KEY_INSTRUCTIONS_MAIN = "KEY_INST_MAIN";
@@ -112,6 +116,22 @@ public class SettingsActivity extends Activity {
                 }
 
             }
+            else if(key.equals(KEY_ADDRESS_BUILDING)) {
+                EditTextPreference p = (EditTextPreference) findPreference(key);
+                String address = p.getEditText().getText().toString();
+
+                if(TextUtils.isEmpty(address)) {
+                    Toast.makeText(getActivity(), "Building cannot be empty", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else if(key.equals(KEY_ADDRESS_STREET)) {
+                EditTextPreference p = (EditTextPreference) findPreference(key);
+                String address = p.getEditText().getText().toString();
+
+                if(TextUtils.isEmpty(address)) {
+                    Toast.makeText(getActivity(), "Street cannot be empty", Toast.LENGTH_SHORT).show();
+                }
+            }
             else if(key.equals(KEY_ALT_NAME)) {
                 EditTextPreference p = (EditTextPreference) findPreference("KEY_ALT_NAME");
                 String address = p.getEditText().getText().toString();
@@ -128,7 +148,22 @@ public class SettingsActivity extends Activity {
                 if(TextUtils.isEmpty(address)) {
                     Toast.makeText(getActivity(), "Address cannot be empty", Toast.LENGTH_SHORT).show();
                 }
+            }
+            else if(key.equals(KEY_ALT_ADDRESS_BUILDING)) {
+                EditTextPreference p = (EditTextPreference) findPreference(key);
+                String address = p.getEditText().getText().toString();
 
+                if(TextUtils.isEmpty(address)) {
+                    Toast.makeText(getActivity(), "Building cannot be empty", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else if(key.equals(KEY_ALT_ADDRESS_STREET)) {
+                EditTextPreference p = (EditTextPreference) findPreference(key);
+                String address = p.getEditText().getText().toString();
+
+                if(TextUtils.isEmpty(address)) {
+                    Toast.makeText(getActivity(), "Street cannot be empty", Toast.LENGTH_SHORT).show();
+                }
             }
             else if(key.equals(KEY_PASS)) {
                 EditTextPreference p = (EditTextPreference) findPreference("KEY_PASS");

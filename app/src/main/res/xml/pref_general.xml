@@ -6,13 +6,17 @@
 
     <PreferenceCategory android:key="Home" android:title="Home">
         <EditTextPreference android:key="@string/pref_key_username" android:title="Name" />
-        <EditTextPreference android:key="@string/pref_key_address" android:title="Home address" />
+        <EditTextPreference android:key="@string/pref_key_address_building" android:title="Building Name" />
+        <EditTextPreference android:key="@string/pref_key_address_street" android:title="Street" />
+        <EditTextPreference android:key="@string/pref_key_address" android:title="Home Address/Area" />
         <EditTextPreference android:key="@string/pref_key_phone" android:title="Phone Number" />
     </PreferenceCategory>
 
     <PreferenceCategory android:key="Alternate" android:title="Alternate">
-        <EditTextPreference android:key="@string/pref_key_alt_name" android:title="Alternate Name" />
-        <EditTextPreference android:key="@string/pref_key_address" android:title="Alternate Address" />
+        <EditTextPreference android:key="@string/pref_key_alt_name" android:title="Name" />
+        <EditTextPreference android:key="@string/pref_key_alt_address_building" android:title="Building Name" />
+        <EditTextPreference android:key="@string/pref_key_alt_address_street" android:title="Street" />
+        <EditTextPreference android:key="@string/pref_key_alt_address" android:title="Address" />
     </PreferenceCategory>
 
 

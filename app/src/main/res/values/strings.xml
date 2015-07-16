@@ -15,8 +15,12 @@
     <string name="pref_key_username">KEY_USERNAME</string>
     <string name="pref_key_phone" >KEY_PHONE</string>
     <string name="pref_key_address">KEY_ADDRESS</string>
+    <string name="pref_key_address_street">KEY_ADDRESS_STREET</string>
+    <string name="pref_key_address_building">KEY_ADDRESS_BUILDING</string>
     <string name="pref_key_alt_name">KEY_ALT_NAME</string>
     <string name="pref_key_alt_address">KEY_ALT_ADDRESS</string>
+    <string name="pref_key_alt_address_street">KEY_ALT_ADDRESS_STREET</string>
+    <string name="pref_key_alt_address_building">KEY_ALT_ADDRESS_BUILDING</string>
     <string name="pref_key_pass">KEY_PASS</string>
     <string name="pref_key_inst_main">KEY_INST_MAIN</string>
 

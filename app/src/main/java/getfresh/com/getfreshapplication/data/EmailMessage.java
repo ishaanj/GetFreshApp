@@ -158,8 +158,8 @@ public class EmailMessage {
             return this;
         }
 
-        public Builder setAddressLine(String address) {
-            addressLine = address;
+        public Builder setAddressLine(String address, String building, String street) {
+            addressLine = "\nBuilding : " + building + ", Street : " + street + ", Area : " + address;
             return this;
         }
 

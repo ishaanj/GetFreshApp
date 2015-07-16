@@ -102,6 +102,10 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 mainActivityFragment = new MainActivityFragment();
             }
 
+            try {
+                getSupportFragmentManager().popBackStackImmediate();
+            } catch (Exception e) {}
+
             fragmentManager.beginTransaction()
                     .replace(R.id.container, mainActivityFragment)
                     .commit();

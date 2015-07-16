@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GetFreshApplication.iml" filepath="$PROJECT_DIR$/GetFreshApplication.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GetFreshApp.iml" filepath="$PROJECT_DIR$/GetFreshApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

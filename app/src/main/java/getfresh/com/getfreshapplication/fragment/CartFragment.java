@@ -54,7 +54,11 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
     private static final String PHONE_NO = SettingsActivity.GetFreshPreferenceFragment.KEY_PHONE;
     private static final String USERNAME = SettingsActivity.GetFreshPreferenceFragment.KEY_NAME;
     private static final String ADDRESS = SettingsActivity.GetFreshPreferenceFragment.KEY_ADDRESS;
+    private static final String ADDRESS_STREET = SettingsActivity.GetFreshPreferenceFragment.KEY_ADDRESS_STREET;
+    private static final String ADDRESS_BUILDING = SettingsActivity.GetFreshPreferenceFragment.KEY_ADDRESS_BUILDING;
     private static final String ALTERNATE_ADDRESS = SettingsActivity.GetFreshPreferenceFragment.KEY_ALT_ADDRESS;
+    private static final String ALTERNATE_STREET = SettingsActivity.GetFreshPreferenceFragment.KEY_ALT_ADDRESS_STREET;
+    private static final String ALTERNATE_BUILDING = SettingsActivity.GetFreshPreferenceFragment.KEY_ALT_ADDRESS_BUILDING;
 
     public  CartFragment() {  }
 
@@ -121,19 +125,39 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                 final String haddress = sp.getString(ADDRESS, "");
                 final String aladdress = sp.getString(ALTERNATE_ADDRESS, "");
 
-                if(!TextUtils.isEmpty(haddress)) {
-                    array[0] = haddress;
-                }
+                final String hBuilding = sp.getString(ADDRESS_BUILDING, "");
+                final String hStreet = sp.getString(ADDRESS_STREET, "");
 
+                final String alBuilding = sp.getString(ALTERNATE_BUILDING, "");
+                final String alStreet = sp.getString(ALTERNATE_STREET, "");
+
+                final boolean hExtra = !TextUtils.isEmpty(hBuilding) && !TextUtils.isEmpty(hStreet);
+                final boolean alExtra = !TextUtils.isEmpty(alBuilding) && !TextUtils.isEmpty(alStreet);
+
+                if(!TextUtils.isEmpty(haddress)) {
+                    String address = "";
+                    if(!TextUtils.isEmpty(hBuilding))
+                        address = hBuilding + ", ";
+                    if(!TextUtils.isEmpty(hStreet))
+                        address += hStreet + ", ";
+                    address += haddress;
+                    array[0] = address;
+                }
                 if(!TextUtils.isEmpty(aladdress)) {
-                    array[1] = aladdress;
+                    String address = "";
+                    if(!TextUtils.isEmpty(alBuilding))
+                        address = alBuilding + ", ";
+                    if(!TextUtils.isEmpty(alStreet))
+                        address += alStreet + ", ";
+                    address += aladdress;
+                    array[0] = address;
                 }
 
                 requestAddress.setSingleChoiceItems(array, 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, int which) {
                         if(which == 0) {
-                            if(!TextUtils.isEmpty(haddress)) {
+                            if(!TextUtils.isEmpty(haddress) && hExtra) {
                                 addressResultType = 1;
 
                                 createDateTimeDialog().show();
@@ -145,14 +169,23 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                                 View v = getActivity().getLayoutInflater().inflate(R.layout.dialog_name_address, null, false);
                                 final EditText editName = (EditText) v.findViewById(R.id.edit_dialog_name);
                                 final EditText editAddress = (EditText) v.findViewById(R.id.edit_dialog_address);
+                                final EditText editBuilding = (EditText) v.findViewById(R.id.edit_dialog_building);
+                                final EditText editStreet = (EditText) v.findViewById(R.id.edit_dialog_street);
+
+                                editName.setText(sp.getString(NAME, ""));
+                                editAddress.setText(haddress);
+                                editBuilding.setText(hBuilding);
+                                editStreet.setText(hStreet);
 
                                 addressBuilder.setView(v);
 
                                 addressBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog2, int which) {
-                                        String name = editName.getText().toString();
-                                        String address = editAddress.getText().toString();
+                                        String name = editName.getText().toString().trim();
+                                        String address = editAddress.getText().toString().trim();
+                                        String building = editBuilding.getText().toString().trim();
+                                        String street = editStreet.getText().toString().trim();
                                         SharedPreferences.Editor edit = sp.edit();
 
                                         if(TextUtils.isEmpty(name)) {
@@ -163,13 +196,30 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                                             edit.putString(NAME, name);
                                         }
 
-                                        if(TextUtils.isDigitsOnly(address)) {
+                                        if(TextUtils.isEmpty(building)) {
+                                            Toast.makeText(getActivity(), "Building cannot be empty", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        else {
+                                            edit.putString(ADDRESS_BUILDING, building);
+                                        }
+
+                                        if(TextUtils.isEmpty(street)) {
+                                            Toast.makeText(getActivity(), "Street cannot be empty", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        else {
+                                            edit.putString(ADDRESS_STREET, street);
+                                        }
+
+                                        if(TextUtils.isEmpty(address)) {
                                             Toast.makeText(getActivity(), "Address cannot be empty", Toast.LENGTH_SHORT).show();
                                             return;
                                         }
                                         else {
                                             edit.putString(ADDRESS, address);
                                         }
+
                                         edit.commit();
 
                                         addressResultType = 1;
@@ -184,7 +234,7 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                             }
                         }
                         else if (which == 1) {
-                            if(!TextUtils.isEmpty(aladdress)) {
+                            if(!TextUtils.isEmpty(aladdress) && alExtra) {
                                 addressResultType = 2;
 
                                 createDateTimeDialog().show();
@@ -207,27 +257,55 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                         View v = getActivity().getLayoutInflater().inflate(R.layout.dialog_name_address, null, false);
                         final EditText editName = (EditText) v.findViewById(R.id.edit_dialog_name);
                         final EditText editAddress = (EditText) v.findViewById(R.id.edit_dialog_address);
+                        final EditText editBuilding = (EditText) v.findViewById(R.id.edit_dialog_building);
+                        final EditText editStreet = (EditText) v.findViewById(R.id.edit_dialog_street);
+
+                        editName.setText(sp.getString(ALT_NAME, ""));
+                        editAddress.setText(sp.getString(ALTERNATE_ADDRESS, ""));
+                        editBuilding.setText(sp.getString(ALTERNATE_BUILDING, ""));
+                        editStreet.setText(sp.getString(ALTERNATE_STREET, ""));
 
                         addressBuilder.setView(v);
 
                         addressBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                String name = editName.getText().toString();
-                                String address = editAddress.getText().toString();
+                                String name = editName.getText().toString().trim();
+                                String address = editAddress.getText().toString().trim();
+                                String building = editBuilding.getText().toString().trim();
+                                String street = editStreet.getText().toString().trim();
                                 SharedPreferences.Editor edit = sp.edit();
 
                                 if (TextUtils.isEmpty(name)) {
                                     Toast.makeText(getActivity(), "Name cannot be empty", Toast.LENGTH_SHORT).show();
+                                    return;
                                 } else {
                                     edit.putString(ALT_NAME, name);
                                 }
 
-                                if (TextUtils.isDigitsOnly(address)) {
+                                if(TextUtils.isEmpty(building)) {
+                                    Toast.makeText(getActivity(), "Building cannot be empty", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                else {
+                                    edit.putString(ALTERNATE_BUILDING, building);
+                                }
+
+                                if(TextUtils.isEmpty(street)) {
+                                    Toast.makeText(getActivity(), "Street cannot be empty", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                else {
+                                    edit.putString(ALTERNATE_STREET, street);
+                                }
+
+                                if (TextUtils.isEmpty(address)) {
                                     Toast.makeText(getActivity(), "Address cannot be empty", Toast.LENGTH_SHORT).show();
+                                    return;
                                 } else {
                                     edit.putString(ALTERNATE_ADDRESS, address);
                                 }
+
                                 edit.commit();
 
                                 addressResultType = 2;
@@ -390,7 +468,7 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
 
     private String no;
     private String name;
-    private String address;
+    private String address, building, street;
     private String date, time;
 
     @Override
@@ -399,10 +477,14 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
         if(addressResultType == 1) {
             name = sp.getString(USERNAME, "");
             address = sp.getString(ADDRESS, "");
+            building = sp.getString(ADDRESS_BUILDING, "");
+            street = sp.getString(ADDRESS_STREET, "");
         }
         else if(addressResultType == 2) {
             name = sp.getString(ALT_NAME, "");
             address = sp.getString(ALTERNATE_ADDRESS, "");
+            building = sp.getString(ALTERNATE_BUILDING, "");
+            street = sp.getString(ALTERNATE_STREET, "");
         }
 
         no = sp.getString(PHONE_NO, "");
@@ -410,7 +492,7 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
         builder = new EmailMessage.Builder(list.get(0))
                 .setName(name)
                 .setPhoneNumber(no)
-                .setAddressLine(address)
+                .setAddressLine(address, building, street)
                 .setTotalPrice(totalResult + "")
                 .setSubject()
                 .setCartList(getcList())
