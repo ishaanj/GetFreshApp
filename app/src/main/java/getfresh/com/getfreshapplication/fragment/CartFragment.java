@@ -62,7 +62,9 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
 
     public  CartFragment() {  }
 
-    private Button itemTotalText;
+    private Button checkout;
+    private TextView itemTotalText;
+    private TextView itemTotalTaxed;
     private UserLocationManager manager;
     private AlertDialog alert;
     private boolean isDiscounted = false;
@@ -105,23 +107,27 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_cart, container, false);
 
-        itemTotalText = (Button) v.findViewById(R.id.cart_total);
+        checkout = (Button)v.findViewById(R.id.checkout);
+        itemTotalText = (TextView) v.findViewById(R.id.cart_price_total);
+        itemTotalTaxed = (TextView) v.findViewById(R.id.taxed_total);
+
         if(isDiscounted) {
-            itemTotalText.setText("Total (Discount) \u20B9 " + totalResult);
+            itemTotalText.setText("Total (Discount) : ₹" + totalResult);
         }
         else {
-            itemTotalText.setText("Total \u20B9 " + totalResult);
+            itemTotalText.setText("Total : ₹" + totalResult);
         }
 
+        itemTotalTaxed.setText("Total (inc. 5% VAT) : ₹"+ Math.ceil(totalResult * 1.05));
 
-        itemTotalText.setOnClickListener(new View.OnClickListener() {
+        checkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 AlertDialog.Builder requestAddress = new AlertDialog.Builder(getActivity());
                 requestAddress.setTitle("Select Address");
 
-                String array[] = new String[] {"Home Address", "Another Address", "New Alternate Address"};
+                String array[] = new String[]{"Home Address", "Another Address", "New Alternate Address"};
                 final String haddress = sp.getString(ADDRESS, "");
                 final String aladdress = sp.getString(ALTERNATE_ADDRESS, "");
 
@@ -134,20 +140,20 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                 final boolean hExtra = !TextUtils.isEmpty(hBuilding) && !TextUtils.isEmpty(hStreet);
                 final boolean alExtra = !TextUtils.isEmpty(alBuilding) && !TextUtils.isEmpty(alStreet);
 
-                if(!TextUtils.isEmpty(haddress)) {
+                if (!TextUtils.isEmpty(haddress)) {
                     String address = "";
-                    if(!TextUtils.isEmpty(hBuilding))
+                    if (!TextUtils.isEmpty(hBuilding))
                         address = hBuilding + ", ";
-                    if(!TextUtils.isEmpty(hStreet))
+                    if (!TextUtils.isEmpty(hStreet))
                         address += hStreet + ", ";
                     address += haddress;
                     array[0] = address;
                 }
-                if(!TextUtils.isEmpty(aladdress)) {
+                if (!TextUtils.isEmpty(aladdress)) {
                     String address = "";
-                    if(!TextUtils.isEmpty(alBuilding))
+                    if (!TextUtils.isEmpty(alBuilding))
                         address = alBuilding + ", ";
-                    if(!TextUtils.isEmpty(alStreet))
+                    if (!TextUtils.isEmpty(alStreet))
                         address += alStreet + ", ";
                     address += aladdress;
                     array[0] = address;
@@ -156,14 +162,13 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                 requestAddress.setSingleChoiceItems(array, 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, int which) {
-                        if(which == 0) {
-                            if(!TextUtils.isEmpty(haddress) && hExtra) {
+                        if (which == 0) {
+                            if (!TextUtils.isEmpty(haddress) && hExtra) {
                                 addressResultType = 1;
 
                                 createDateTimeDialog().show();
                                 dialog.dismiss();
-                            }
-                            else {
+                            } else {
                                 AlertDialog.Builder addressBuilder = new AlertDialog.Builder(getActivity());
                                 addressBuilder.setTitle("Address Details");
                                 View v = getActivity().getLayoutInflater().inflate(R.layout.dialog_name_address, null, false);
@@ -188,35 +193,31 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                                         String street = editStreet.getText().toString().trim();
                                         SharedPreferences.Editor edit = sp.edit();
 
-                                        if(TextUtils.isEmpty(name)) {
+                                        if (TextUtils.isEmpty(name)) {
                                             Toast.makeText(getActivity(), "Name cannot be empty", Toast.LENGTH_SHORT).show();
                                             return;
-                                        }
-                                        else {
+                                        } else {
                                             edit.putString(NAME, name);
                                         }
 
-                                        if(TextUtils.isEmpty(building)) {
+                                        if (TextUtils.isEmpty(building)) {
                                             Toast.makeText(getActivity(), "Building cannot be empty", Toast.LENGTH_SHORT).show();
                                             return;
-                                        }
-                                        else {
+                                        } else {
                                             edit.putString(ADDRESS_BUILDING, building);
                                         }
 
-                                        if(TextUtils.isEmpty(street)) {
+                                        if (TextUtils.isEmpty(street)) {
                                             Toast.makeText(getActivity(), "Street cannot be empty", Toast.LENGTH_SHORT).show();
                                             return;
-                                        }
-                                        else {
+                                        } else {
                                             edit.putString(ADDRESS_STREET, street);
                                         }
 
-                                        if(TextUtils.isEmpty(address)) {
+                                        if (TextUtils.isEmpty(address)) {
                                             Toast.makeText(getActivity(), "Address cannot be empty", Toast.LENGTH_SHORT).show();
                                             return;
-                                        }
-                                        else {
+                                        } else {
                                             edit.putString(ADDRESS, address);
                                         }
 
@@ -232,20 +233,17 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
 
                                 addressBuilder.show();
                             }
-                        }
-                        else if (which == 1) {
-                            if(!TextUtils.isEmpty(aladdress) && alExtra) {
+                        } else if (which == 1) {
+                            if (!TextUtils.isEmpty(aladdress) && alExtra) {
                                 addressResultType = 2;
 
                                 createDateTimeDialog().show();
                                 dialog.dismiss();
-                            }
-                            else {
+                            } else {
                                 createAlternateAlertDialog();
                                 dialog.dismiss();
                             }
-                        }
-                        else {
+                        } else {
                             createAlternateAlertDialog();
                             dialog.dismiss();
                         }
@@ -283,19 +281,17 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                                     edit.putString(ALT_NAME, name);
                                 }
 
-                                if(TextUtils.isEmpty(building)) {
+                                if (TextUtils.isEmpty(building)) {
                                     Toast.makeText(getActivity(), "Building cannot be empty", Toast.LENGTH_SHORT).show();
                                     return;
-                                }
-                                else {
+                                } else {
                                     edit.putString(ALTERNATE_BUILDING, building);
                                 }
 
-                                if(TextUtils.isEmpty(street)) {
+                                if (TextUtils.isEmpty(street)) {
                                     Toast.makeText(getActivity(), "Street cannot be empty", Toast.LENGTH_SHORT).show();
                                     return;
-                                }
-                                else {
+                                } else {
                                     edit.putString(ALTERNATE_STREET, street);
                                 }
 

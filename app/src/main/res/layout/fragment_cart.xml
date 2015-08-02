@@ -3,31 +3,84 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Item Name"
+        android:id="@+id/cart_title_header"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Item Quantity"
+        android:id="@+id/cart_quantity_header"
+        android:layout_above="@+id/cart_list"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Item Price"
+        android:id="@+id/cart_price_header"
+        android:layout_above="@+id/cart_list"
+        android:layout_alignRight="@+id/cart_list"
+        android:layout_alignEnd="@+id/cart_list"
+        android:textStyle="bold" />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/cart_list"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_below="@id/cart_title_header"
         tools:listitem="@layout/fragment_cart_list_item"
         android:background="#B0BEC5"
         android:divider="#FFFFFF"
         android:dividerHeight="4dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:layout_marginTop="12dp"
-        android:layout_above="@+id/cart_total" />
+        android:layout_above="@+id/cart_price_total"/>
+
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/cart_total"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="8dp"
+        android:text="Checkout"
+        android:id="@+id/checkout"
         android:textSize="28dp"
-        android:background="#EEEEEE" />
+        android:background="#EEEEEE"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/cart_list"
+        android:layout_alignStart="@+id/cart_list" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Total (inc. 5% VAT) : "
+        android:id="@+id/taxed_total"
+        android:layout_alignParentRight="true"
+        android:textStyle="bold"
+        android:textSize="28dp"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@id/checkout"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total : "
+        android:id="@+id/cart_price_total"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@id/taxed_total"
+        android:textStyle="bold"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:textSize="26dp" />
+
 </RelativeLayout>

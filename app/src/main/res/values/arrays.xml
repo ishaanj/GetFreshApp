@@ -76,6 +76,25 @@
         <item>140.00</item>
     </string-array>
 
+    <string-array name="item_prices_untaxed">
+        <item>133.00</item>
+        <item>142.00</item>
+        <item>133.00</item>
+        <item>142.00</item>
+        <item>133.00</item>
+        <item>133.00</item>
+        <item>133.00</item>
+        <item>133.00</item>
+        <item>133.00</item>
+        <item>133.00</item>
+        <item>133.00</item>
+        <item>133.00</item>
+        <item>142.00</item>
+        <item>133.00</item>
+        <item>133.00</item>
+        <item>133.00</item>
+    </string-array>
+
     <string-array name="item_flavours1">
         <item>Spicy</item>
         <item>Spicy</item>

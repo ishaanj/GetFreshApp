@@ -119,13 +119,13 @@ public class PromoFragment extends Fragment implements AdapterView.OnItemClickLi
 
             if (position == 0) {
                 if (noOfItems >= 7) {
-                    cartTotal = cartTotal - 280;
+                    cartTotal = cartTotal - 266;
                     CODE_APPLIED = position;
                     return Snackbar.make(v, "Code " + codeName + " applied", Snackbar.LENGTH_SHORT);
                 } else if (noOfItems == 6)
-                    return Snackbar.make(v, "Add 1 more item to cart", Snackbar.LENGTH_SHORT);
+                    return Snackbar.make(v, "Add 1 more item to cart (of ₹140 only)", Snackbar.LENGTH_SHORT);
                 else if (noOfItems == 5)
-                    return Snackbar.make(v, "Add 2 more items to your cart", Snackbar.LENGTH_SHORT);
+                    return Snackbar.make(v, "Add 2 more items to your cart(of ₹140 only)", Snackbar.LENGTH_SHORT);
                 else if (noOfItems < 5)
                     return Snackbar.make(v, "Cart does not have 5 items", Snackbar.LENGTH_LONG);
 

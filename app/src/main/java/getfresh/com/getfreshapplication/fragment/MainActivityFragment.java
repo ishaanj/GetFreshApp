@@ -20,6 +20,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -34,6 +35,8 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
     public static final String TAG = "MainActivityFragment";
     public static final String KEY_INST_MAIN = SettingsActivity.GetFreshPreferenceFragment.KEY_INSTRUCTIONS_MAIN;
     private static int QUANTITY_MAX = 10 , QUANTITY_MIN = 1;
+    private String[] itemPrices;
+    private String[] itemPricesTaxed;
     private ListView lv;
     private boolean isLand;
     private ItemAdapter adapter;
@@ -143,7 +146,9 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
         View v = inflater.inflate(R.layout.dialog_item_details, null, false);
         final ImageView im = (ImageView) v.findViewById(R.id.dialog_item_img);
         final NumberPicker nm = (NumberPicker) v.findViewById(R.id.numberPicker);
+        final TextView pw = (TextView)v.findViewById(R.id.dialog_item_price);
 
+        pw.setText("(inc. VAT)₹"+itemPricesTaxed[position]);
         nm.setMaxValue(QUANTITY_MAX);
         nm.setMinValue(QUANTITY_MIN);
         nm.setWrapSelectorWheel(false);
@@ -238,7 +243,6 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
         };
         private String[] itemTitles;
         //private String[] itemDescriptions;
-        private String[] itemPrices;
         //private String[] itemSubtitles;
         //private String[] itemFlavour1;
         //private String[] itemFlavour2;
@@ -250,7 +254,8 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
             inflater = LayoutInflater.from(getActivity());
             itemTitles = getActivity().getResources().getStringArray(R.array.item_titles);
             //itemDescriptions = getActivity().getResources().getStringArray(R.array.item_descriptions);
-            itemPrices = getActivity().getResources().getStringArray(R.array.item_prices);
+            itemPricesTaxed = getActivity().getResources().getStringArray(R.array.item_prices);
+            itemPrices = getActivity().getResources().getStringArray(R.array.item_prices_untaxed);
             //itemSubtitles = getActivity().getResources().getStringArray(R.array.item_subtitles);
             //itemFlavour1 = getActivity().getResources().getStringArray(R.array.item_flavours1);
             //itemFlavour2 = getActivity().getResources().getStringArray(R.array.item_flavours2);
