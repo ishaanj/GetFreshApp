@@ -11,10 +11,15 @@ import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.ShareActionProvider;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -81,6 +86,8 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
     private boolean datetimeNow = false;
     private Calendar cal;
 
+    private ShareActionProvider shareActionProvider;
+
     //addressResultType : 1 for Home, 2 for Alternate
     private int addressResultType = 0;
 
@@ -93,7 +100,7 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
 
         try {
@@ -101,6 +108,18 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
         } catch (ClassCastException e) {
             Log.e("CartFragment", "Activity must implement the CartFragmentListener");
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //getActivity().getMenuInflater().inflate(R.menu.menu_cart, menu);
+        //MenuItem shareItem = menu.findItem(R.id.cart_share_action);
+        //shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

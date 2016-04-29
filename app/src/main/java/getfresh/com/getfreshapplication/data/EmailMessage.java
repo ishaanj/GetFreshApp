@@ -37,6 +37,8 @@ public class EmailMessage {
         return phoneNumber;
     }
 
+    public String getMessage() { return message; }
+
     public static class Builder {
 
         private Address location;

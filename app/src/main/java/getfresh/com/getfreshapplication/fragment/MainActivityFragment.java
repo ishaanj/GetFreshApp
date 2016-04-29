@@ -1,6 +1,7 @@
 package getfresh.com.getfreshapplication.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -106,7 +107,7 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
 
         try {
