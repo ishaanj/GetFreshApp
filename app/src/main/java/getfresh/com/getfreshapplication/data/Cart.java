@@ -42,4 +42,8 @@ public class Cart {
     public String toString() {
         return itemName + "\tQuantity = " + itemQuantity + "\tPrice = " + (itemQuantity * Double.parseDouble(itemPrice));
     }
+
+    public String toStringNoPrice(){
+        return itemName + " : " + itemQuantity;
+    }
 }

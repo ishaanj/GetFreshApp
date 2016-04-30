@@ -1,16 +1,19 @@
 package getfresh.com.getfreshapplication.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ShareActionProvider;
@@ -26,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,6 +72,7 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
     public  CartFragment() {  }
 
     private Button checkout;
+    private ImageButton share;
     private TextView itemTotalText;
     private TextView itemTotalTaxed;
     private UserLocationManager manager;
@@ -129,6 +134,7 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
         checkout = (Button)v.findViewById(R.id.checkout);
         itemTotalText = (TextView) v.findViewById(R.id.cart_price_total);
         itemTotalTaxed = (TextView) v.findViewById(R.id.taxed_total);
+        share = (ImageButton)v.findViewById(R.id.shareButton);
 
         if(isDiscounted) {
             itemTotalText.setText("Total (Discount) : ₹" + totalResult);
@@ -138,6 +144,31 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
         }
 
         itemTotalTaxed.setText("Total (inc. 5% VAT) : ₹"+ Math.ceil(totalResult * 1.05));
+
+        share.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public  void onClick(View v) {
+                final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String message = "";
+
+                message += "Delivery Date : " + new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+                message += "\nParty: " + sp.getString(NAME, "");
+                message += "\nLocation: " + sp.getString(ADDRESS, "");
+
+                if(cList != null) {
+                    for(Cart c : cList){
+                       message += "\n" + c.toStringNoPrice();
+                    }
+
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, message);
+                    sendIntent.setType("text/plain");
+                    sendIntent.setPackage("com.whatsapp");
+                    startActivity(sendIntent);
+                }
+            }
+        });
 
         checkout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -389,8 +420,10 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                     * Actual call to get the location */
                     manager  = new UserLocationManager(getActivity());
                     manager.setListener(CartFragment.this);
-
+                    String[] loc = {Manifest.permission.ACCESS_FINE_LOCATION};
+                    requestPermissions(loc, 1340);
                     if(!manager.checkIfGPSIsEnabled()) {
+
                         alert = manager.alertUserToEnableGPS();
                         alert.show();
                     }

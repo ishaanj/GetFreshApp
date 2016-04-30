@@ -35,7 +35,7 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/cart_list"
         android:layout_below="@id/cart_title_header"
         tools:listitem="@layout/fragment_cart_list_item"
@@ -56,6 +56,8 @@
         android:textSize="28dp"
         android:background="#EEEEEE"
         android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/cart_title_header"
+        android:layout_toRightOf="@+id/cart_title_header"
         android:layout_alignLeft="@+id/cart_list"
         android:layout_alignStart="@+id/cart_list" />
 
@@ -67,7 +69,7 @@
         android:id="@+id/taxed_total"
         android:layout_alignParentRight="true"
         android:textStyle="bold"
-        android:textSize="28dp"
+        android:textSize="22dp"
         android:layout_alignParentEnd="true"
         android:layout_above="@id/checkout"/>
 
@@ -81,6 +83,19 @@
         android:layout_above="@id/taxed_total"
         android:textStyle="bold"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:textSize="26dp" />
+        android:textSize="20dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/shareButton"
+        android:src="@android:drawable/ic_menu_share"
+        android:background="@android:color/transparent"
+        android:layout_above="@+id/checkout"
+        android:layout_below="@+id/cart_list"
+        android:layout_alignRight="@+id/cart_title_header"
+        android:layout_alignEnd="@+id/cart_title_header"
+        android:layout_alignLeft="@+id/cart_list"
+        android:layout_alignStart="@+id/cart_list" />
 
 </RelativeLayout>
