@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.NumberPicker;
@@ -38,7 +39,7 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
     private static int QUANTITY_MAX = 10 , QUANTITY_MIN = 1;
     private String[] itemPrices;
     private String[] itemPricesTaxed;
-    private ListView lv;
+    private GridView lv;
     private boolean isLand;
     private ItemAdapter adapter;
     private ArrayList<Cart> cartList = new ArrayList<Cart>();
@@ -99,7 +100,7 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
         }
 
 
-        lv = (ListView) v.findViewById(R.id.main_list);
+        lv = (GridView) v.findViewById(R.id.main_list);
         lv.setAdapter(adapter);
 
         lv.setOnItemClickListener(this);
