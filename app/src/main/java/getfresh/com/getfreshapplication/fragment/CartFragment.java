@@ -1,20 +1,16 @@
 package getfresh.com.getfreshapplication.fragment;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.TextUtils;
@@ -178,6 +174,7 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                 requestAddress.setTitle("Select Address");
 
                 String array[] = new String[]{"Home Address", "Another Address", "New Alternate Address"};
+                // Load all addresses and location data stored in shared preferenced
                 final String haddress = sp.getString(ADDRESS, "");
                 final String aladdress = sp.getString(ALTERNATE_ADDRESS, "");
 
@@ -190,6 +187,7 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                 final boolean hExtra = !TextUtils.isEmpty(hBuilding) && !TextUtils.isEmpty(hStreet);
                 final boolean alExtra = !TextUtils.isEmpty(alBuilding) && !TextUtils.isEmpty(alStreet);
 
+                // Check for empty strings and map address to array
                 if (!TextUtils.isEmpty(haddress)) {
                     String address = "";
                     if (!TextUtils.isEmpty(hBuilding))
@@ -213,78 +211,11 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                     @Override
                     public void onClick(final DialogInterface dialog, int which) {
                         if (which == 0) {
-                            if (!TextUtils.isEmpty(haddress) && hExtra) {
-                                addressResultType = 1;
+                            createHomeAddressDialog(dialog);
 
-                                createDateTimeDialog().show();
-                                dialog.dismiss();
-                            } else {
-                                AlertDialog.Builder addressBuilder = new AlertDialog.Builder(getActivity());
-                                addressBuilder.setTitle("Address Details");
-                                View v = getActivity().getLayoutInflater().inflate(R.layout.dialog_name_address, null, false);
-                                final EditText editName = (EditText) v.findViewById(R.id.edit_dialog_name);
-                                final EditText editAddress = (EditText) v.findViewById(R.id.edit_dialog_address);
-                                final EditText editBuilding = (EditText) v.findViewById(R.id.edit_dialog_building);
-                                final EditText editStreet = (EditText) v.findViewById(R.id.edit_dialog_street);
-
-                                editName.setText(sp.getString(NAME, ""));
-                                editAddress.setText(haddress);
-                                editBuilding.setText(hBuilding);
-                                editStreet.setText(hStreet);
-
-                                addressBuilder.setView(v);
-
-                                addressBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog2, int which) {
-                                        String name = editName.getText().toString().trim();
-                                        String address = editAddress.getText().toString().trim();
-                                        String building = editBuilding.getText().toString().trim();
-                                        String street = editStreet.getText().toString().trim();
-                                        SharedPreferences.Editor edit = sp.edit();
-
-                                        if (TextUtils.isEmpty(name)) {
-                                            Toast.makeText(getActivity(), "Name cannot be empty", Toast.LENGTH_SHORT).show();
-                                            return;
-                                        } else {
-                                            edit.putString(NAME, name);
-                                        }
-
-                                        if (TextUtils.isEmpty(building)) {
-                                            Toast.makeText(getActivity(), "Building cannot be empty", Toast.LENGTH_SHORT).show();
-                                            return;
-                                        } else {
-                                            edit.putString(ADDRESS_BUILDING, building);
-                                        }
-
-                                        if (TextUtils.isEmpty(street)) {
-                                            Toast.makeText(getActivity(), "Street cannot be empty", Toast.LENGTH_SHORT).show();
-                                            return;
-                                        } else {
-                                            edit.putString(ADDRESS_STREET, street);
-                                        }
-
-                                        if (TextUtils.isEmpty(address)) {
-                                            Toast.makeText(getActivity(), "Address cannot be empty", Toast.LENGTH_SHORT).show();
-                                            return;
-                                        } else {
-                                            edit.putString(ADDRESS, address);
-                                        }
-
-                                        edit.commit();
-
-                                        addressResultType = 1;
-
-                                        createDateTimeDialog().show();
-                                        dialog2.dismiss();
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                addressBuilder.show();
-                            }
                         } else if (which == 1) {
                             if (!TextUtils.isEmpty(aladdress) && alExtra) {
+                                // Alternate address
                                 addressResultType = 2;
 
                                 createDateTimeDialog().show();
@@ -299,15 +230,98 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                         }
                     }
 
+                    private void createHomeAddressDialog(final DialogInterface dialog) {
+                        if (!TextUtils.isEmpty(haddress) && hExtra) {
+                            addressResultType = 1;
+
+                            createDateTimeDialog().show();
+                            dialog.dismiss();
+                        } else {
+                            AlertDialog.Builder addressBuilder = new AlertDialog.Builder(getActivity());
+                            addressBuilder.setTitle("Address Details");
+
+                            // Get inner views
+                            View v = getActivity().getLayoutInflater().inflate(R.layout.dialog_name_address, null, false);
+                            final EditText editName = (EditText) v.findViewById(R.id.edit_dialog_name);
+                            final EditText editAddress = (EditText) v.findViewById(R.id.edit_dialog_address);
+                            final EditText editBuilding = (EditText) v.findViewById(R.id.edit_dialog_building);
+                            final EditText editStreet = (EditText) v.findViewById(R.id.edit_dialog_street);
+
+                            // Set text in inner rows
+                            editName.setText(sp.getString(NAME, ""));
+                            editAddress.setText(haddress);
+                            editBuilding.setText(hBuilding);
+                            editStreet.setText(hStreet);
+
+                            addressBuilder.setView(v);
+
+                            addressBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog2, int which) {
+                                    // Get inputs from dialog
+                                    String name = editName.getText().toString().trim();
+                                    String address = editAddress.getText().toString().trim();
+                                    String building = editBuilding.getText().toString().trim();
+                                    String street = editStreet.getText().toString().trim();
+
+                                    SharedPreferences.Editor edit = sp.edit();
+
+                                    // Validate and save in shared preferences
+                                    if (TextUtils.isEmpty(name)) {
+                                        Toast.makeText(getActivity(), "Name cannot be empty", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    } else {
+                                        edit.putString(NAME, name);
+                                    }
+
+                                    if (TextUtils.isEmpty(building)) {
+                                        Toast.makeText(getActivity(), "Building cannot be empty", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    } else {
+                                        edit.putString(ADDRESS_BUILDING, building);
+                                    }
+
+                                    if (TextUtils.isEmpty(street)) {
+                                        Toast.makeText(getActivity(), "Street cannot be empty", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    } else {
+                                        edit.putString(ADDRESS_STREET, street);
+                                    }
+
+                                    if (TextUtils.isEmpty(address)) {
+                                        Toast.makeText(getActivity(), "Address cannot be empty", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    } else {
+                                        edit.putString(ADDRESS, address);
+                                    }
+
+                                    edit.commit();
+
+                                    // Home address
+                                    addressResultType = 1;
+
+                                    createDateTimeDialog().show();
+                                    dialog2.dismiss();
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            addressBuilder.show();
+                        }
+                    }
+
                     private void createAlternateAlertDialog() {
                         AlertDialog.Builder addressBuilder = new AlertDialog.Builder(getActivity());
                         addressBuilder.setTitle("Alternate Address Details");
+
+                        // Get inner views
                         View v = getActivity().getLayoutInflater().inflate(R.layout.dialog_name_address, null, false);
                         final EditText editName = (EditText) v.findViewById(R.id.edit_dialog_name);
                         final EditText editAddress = (EditText) v.findViewById(R.id.edit_dialog_address);
                         final EditText editBuilding = (EditText) v.findViewById(R.id.edit_dialog_building);
                         final EditText editStreet = (EditText) v.findViewById(R.id.edit_dialog_street);
 
+                        // Set values to inner views
                         editName.setText(sp.getString(ALT_NAME, ""));
                         editAddress.setText(sp.getString(ALTERNATE_ADDRESS, ""));
                         editBuilding.setText(sp.getString(ALTERNATE_BUILDING, ""));
@@ -318,12 +332,15 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                         addressBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                // Get user input from dialog
                                 String name = editName.getText().toString().trim();
                                 String address = editAddress.getText().toString().trim();
                                 String building = editBuilding.getText().toString().trim();
                                 String street = editStreet.getText().toString().trim();
+
                                 SharedPreferences.Editor edit = sp.edit();
 
+                                // Validate and save in shared preferences
                                 if (TextUtils.isEmpty(name)) {
                                     Toast.makeText(getActivity(), "Name cannot be empty", Toast.LENGTH_SHORT).show();
                                     return;
@@ -354,6 +371,7 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
 
                                 edit.commit();
 
+                                // Alternate address
                                 addressResultType = 2;
 
                                 createDateTimeDialog().show();
