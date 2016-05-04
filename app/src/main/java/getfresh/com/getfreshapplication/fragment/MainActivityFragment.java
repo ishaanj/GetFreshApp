@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -303,13 +304,15 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
             if(convertView == null) {
                 v = inflater.inflate(R.layout.fragment_main_list_item, parent, false);
                 vh = new ViewHolder(v);
+                new ImageLoadTask(getActivity().getResources(), vh.img).execute(imageIds[position]);
             }
             else {
                 v = convertView;
                 vh = (ViewHolder) v.getTag();
             }
 
-            vh.img.setImageResource(imageIds[position]);
+            //vh.img.setImageResource(imageIds[position]);
+
             //vh.title.setText(itemTitles[position]);
             //vh.desc.setText(itemDescriptions[position]);
             //vh.price.setText(itemPrices[position]);
@@ -342,6 +345,32 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
                 //flavour1 = (TextView)v.findViewById(R.id.list_main_flavour1);
                 v.setTag(this);
             }
+        }
+
+    }
+
+    private static class ImageLoadTask extends AsyncTask<Integer, Void, Bitmap> {
+        private Resources r;
+        private ImageView im;
+
+        public ImageLoadTask(Resources r, ImageView im) {
+            this.r = r;
+            this.im = im;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+
+            if (this.im != null)
+                im.setImageBitmap(bitmap);
+        }
+
+        @Override
+        protected Bitmap doInBackground(Integer... integers) {
+            BitmapFactory.Options opt = new BitmapFactory.Options();
+            opt.inSampleSize = 2;
+            return BitmapFactory.decodeResource(r, integers[0], opt);
         }
     }
 
