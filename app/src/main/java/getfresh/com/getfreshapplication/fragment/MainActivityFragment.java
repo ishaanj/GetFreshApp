@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -26,6 +27,7 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import getfresh.com.getfreshapplication.R;
 import getfresh.com.getfreshapplication.data.Cart;
@@ -226,24 +228,9 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
     }
 
     private class ItemAdapter extends BaseAdapter {
-        private int[] imageIds = new int[] {
-                R.drawable.am,
-                R.drawable.cc,
-                R.drawable.c,
-                R.drawable.ca,
-                R.drawable.ft,
-                R.drawable.j,
-                R.drawable.km,
-                R.drawable.kc,
-                R.drawable.k,
-                R.drawable.mm,
-                R.drawable.nek,
-                R.drawable.pbbq,
-                R.drawable.pp,
-                R.drawable.r,
-                R.drawable.s,
-                R.drawable.tt
-        };
+
+        private Bitmap imageBitmaps[];
+
         private String[] itemTitles;
         //private String[] itemDescriptions;
         //private String[] itemSubtitles;
@@ -254,6 +241,15 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
         private LayoutInflater inflater;
 
         public ItemAdapter() {
+            imageBitmaps = new Bitmap[ImageLoadTask.imageIds.length];
+            try {
+                new ImageLoadTask(getResources(), imageBitmaps).execute().get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
             inflater = LayoutInflater.from(getActivity());
             itemTitles = getActivity().getResources().getStringArray(R.array.item_titles);
             //itemDescriptions = getActivity().getResources().getStringArray(R.array.item_descriptions);
@@ -304,15 +300,13 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
             if(convertView == null) {
                 v = inflater.inflate(R.layout.fragment_main_list_item, parent, false);
                 vh = new ViewHolder(v);
-                new ImageLoadTask(getActivity().getResources(), vh.img).execute(imageIds[position]);
             }
             else {
                 v = convertView;
                 vh = (ViewHolder) v.getTag();
             }
 
-            //vh.img.setImageResource(imageIds[position]);
-
+            vh.img.setImageBitmap(imageBitmaps[position]);
             //vh.title.setText(itemTitles[position]);
             //vh.desc.setText(itemDescriptions[position]);
             //vh.price.setText(itemPrices[position]);
@@ -337,40 +331,56 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
             //TextView flavour1;
 
             public ViewHolder(View v) {
-                img = (ImageView) v.findViewById(R.id.list_main_image);
-                //title = (TextView) v.findViewById(R.id.list_main_title);
-                //desc = (TextView) v.findViewById(R.id.list_main_description);
-                //price = (TextView) v.findViewById(R.id.list_main_price);
-                //subtitle = (TextView) v.findViewById(R.id.list_main_subtitle);
-                //flavour1 = (TextView)v.findViewById(R.id.list_main_flavour1);
-                v.setTag(this);
+                if(v.getTag() == null) {
+                    img = (ImageView) v.findViewById(R.id.list_main_image);
+                    //title = (TextView) v.findViewById(R.id.list_main_title);
+                    //desc = (TextView) v.findViewById(R.id.list_main_description);
+                    //price = (TextView) v.findViewById(R.id.list_main_price);
+                    //subtitle = (TextView) v.findViewById(R.id.list_main_subtitle);
+                    //flavour1 = (TextView)v.findViewById(R.id.list_main_flavour1);
+                    v.setTag(this);
+                }
             }
         }
 
     }
 
-    private static class ImageLoadTask extends AsyncTask<Integer, Void, Bitmap> {
+    private static class ImageLoadTask extends AsyncTask<Void, Void, Void> {
         private Resources r;
-        private ImageView im;
+        private Bitmap[] bitmaps;
 
-        public ImageLoadTask(Resources r, ImageView im) {
+        public static int[] imageIds = new int[] {
+                R.drawable.am,
+                R.drawable.cc,
+                R.drawable.c,
+                R.drawable.ca,
+                R.drawable.ft,
+                R.drawable.j,
+                R.drawable.km,
+                R.drawable.kc,
+                R.drawable.k,
+                R.drawable.mm,
+                R.drawable.nek,
+                R.drawable.pbbq,
+                R.drawable.pp,
+                R.drawable.r,
+                R.drawable.s,
+                R.drawable.tt
+        };
+
+        public ImageLoadTask(Resources r, Bitmap[] bitmaps) {
             this.r = r;
-            this.im = im;
+            this.bitmaps = bitmaps;
         }
 
         @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-
-            if (this.im != null)
-                im.setImageBitmap(bitmap);
-        }
-
-        @Override
-        protected Bitmap doInBackground(Integer... integers) {
-            BitmapFactory.Options opt = new BitmapFactory.Options();
-            opt.inSampleSize = 2;
-            return BitmapFactory.decodeResource(r, integers[0], opt);
+        protected Void doInBackground(Void... integers) {
+            for (int i = 0; i < imageIds.length; i++) {
+                BitmapFactory.Options opt = new BitmapFactory.Options();
+                opt.inSampleSize = 4;
+                bitmaps[i] = BitmapFactory.decodeResource(r, imageIds[i], opt);
+            }
+            return null;
         }
     }
 
