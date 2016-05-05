@@ -116,9 +116,14 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             cartTotal = 0;
             cartFragment = (cartFragment == null) ? new CartFragment() : cartFragment;
 
-            for (Cart c : cartList)
-                if (c != null)
-                    cartTotal += (double) c.getItemQuantity() * (Double.parseDouble(c.getItemPrice()));
+            if (cartList != null) {
+                for (Cart c : cartList)
+                    if (c != null)
+                        cartTotal += (double) c.getItemQuantity() * (Double.parseDouble(c.getItemPrice()));
+            }
+            else {
+                return;
+            }
 
             if(promoFragment != null) {
                 promoFragment.setCartArrayList(cartList, cartTotal);

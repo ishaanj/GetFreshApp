@@ -6,11 +6,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.TextUtils;
@@ -87,6 +91,10 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
     private boolean datetimeNow = false;
     private Calendar cal;
 
+    private View v;
+
+    private static final int PERMISSION_FINE_LOCATION = 1340;
+
     private ShareActionProvider shareActionProvider;
 
     //addressResultType : 1 for Home, 2 for Alternate
@@ -153,7 +161,7 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
 
                 if(cList != null) {
                     for(Cart c : cList){
-                       message += "\n" + c.toStringNoPrice();
+                        message += "\n" + c.toStringNoPrice();
                     }
 
                     Intent sendIntent = new Intent();
@@ -218,6 +226,16 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                                 // Alternate address
                                 addressResultType = 2;
 
+                                int locationPermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+
+                                if(locationPermission != PackageManager.PERMISSION_GRANTED) {
+                                    String[] loc = {Manifest.permission.ACCESS_FINE_LOCATION};
+                                    requestPermissions(loc, 1340);
+
+                                    dialog.dismiss();
+                                    return;
+                                }
+
                                 createDateTimeDialog().show();
                                 dialog.dismiss();
                             } else {
@@ -233,6 +251,16 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                     private void createHomeAddressDialog(final DialogInterface dialog) {
                         if (!TextUtils.isEmpty(haddress) && hExtra) {
                             addressResultType = 1;
+
+                            int locationPermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+
+                            if(locationPermission != PackageManager.PERMISSION_GRANTED) {
+                                String[] loc = {Manifest.permission.ACCESS_FINE_LOCATION};
+                                requestPermissions(loc, 1340);
+
+                                dialog.dismiss();
+                                return;
+                            }
 
                             createDateTimeDialog().show();
                             dialog.dismiss();
@@ -299,6 +327,20 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
 
                                     // Home address
                                     addressResultType = 1;
+
+                                    int locationPermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+
+                                    if(locationPermission != PackageManager.PERMISSION_GRANTED) {
+                                        String[] loc = {Manifest.permission.ACCESS_FINE_LOCATION};
+                                        requestPermissions(loc, 1340);
+
+                                        Log.d("CartFragment", "Location is not granted");
+                                        dialog2.dismiss();
+                                        dialog.dismiss();
+                                        return;
+                                    }
+
+                                    Log.d("CartFragment", "Location is granted");
 
                                     createDateTimeDialog().show();
                                     dialog2.dismiss();
@@ -374,6 +416,17 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                                 // Alternate address
                                 addressResultType = 2;
 
+                                int locationPermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+                                if(locationPermission != PackageManager.PERMISSION_GRANTED) {
+                                    String[] loc = {Manifest.permission.ACCESS_FINE_LOCATION};
+                                    requestPermissions(loc, 1340);
+
+                                    Log.d("CartFragment", "Location is not granted");
+                                    dialog.dismiss();
+                                    return;
+                                }
+
+                                Log.d("CartFragment", "Location is granted");
                                 createDateTimeDialog().show();
                                 dialog.dismiss();
                             }
@@ -419,6 +472,7 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
         });
 
         lv.setAdapter(adapter);
+        this.v = v;
 
         return v;
     }
@@ -435,11 +489,10 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
                 if(ch == 0) {
                     datetimeNow = true;
                     /**
-                    * Actual call to get the location */
+                     * Actual call to get the location */
+
                     manager  = new UserLocationManager(getActivity());
                     manager.setListener(CartFragment.this);
-                    String[] loc = {Manifest.permission.ACCESS_FINE_LOCATION};
-                    requestPermissions(loc, 1340);
                     if(!manager.checkIfGPSIsEnabled()) {
 
                         alert = manager.alertUserToEnableGPS();
@@ -492,7 +545,29 @@ public class CartFragment extends Fragment implements UserLocationManager.UserLo
             }
         });
 
+        Log.d("CartFragment", "Showing create Date Time Dialog");
         return builder;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.d("CartFragment", "REQUEST CODE = " + requestCode);
+
+        switch (requestCode) {
+            case PERMISSION_FINE_LOCATION: {
+                Log.d("CartFragment", "PERMISSION FINE LOCATION");
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    createDateTimeDialog().show();
+                }
+                else {
+                    Log.d("CartFragment", "Snackbar should show here");
+
+                    Snackbar.make(v, "Location is required for delivery", Snackbar.LENGTH_LONG)
+                           .show();
+                }
+            }
+        }
     }
 
     public void setIsDiscounted(boolean isDiscounted) {
